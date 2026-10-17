@@ -34,7 +34,7 @@ IRAN = [
         ("gol18", "18k gold", "per gram"), ("mithqal", "Mithqal", "per mithqal"),
     ]),
 ]
-EXTRA = [("bourse", "Tehran Stock Exchange (TEDPIX)", "index"), ("ounce", "Gold ounce", "USD"),
+EXTRA = [("ounce", "Gold ounce", "USD"),
          ("bitcoin", "Bitcoin", "USD")]
 
 WORLD = [
@@ -79,6 +79,29 @@ def fetch_bonbast():
     if "usd1" not in data:
         raise RuntimeError(f"Unexpected Bonbast reply: {str(data)[:120]}")
     return data
+
+
+def fetch_tse():
+    """Tehran Stock Exchange and Fara Bourse indices from tablokhani.com's public endpoint."""
+    req = urllib.request.Request("https://api.tablokhani.com/public/market-indices", headers={
+        "User-Agent": UA, "Accept": "application/json", "Origin": "https://tablokhani.com",
+        "Referer": "https://tablokhani.com/"})
+    data = json.load(urllib.request.urlopen(req, timeout=25))["data"]
+
+    def n(v):
+        return num(str(v).replace(",", "")) if v is not None else None
+
+    b, f = data["bourse"], data["fara_bourse"]
+    return {
+        "source": "tablokhani.com", "fetched": now_iso(), "state": b.get("state"),
+        "tedpix": n(b.get("index")), "tedpix_change": n(b.get("index_change")),
+        "tedpix_pct": n(b.get("index_change_percent")),
+        "equal": n(b.get("index_h")), "equal_pct": n(b.get("index_h_change_percent")),
+        "trade_value": b.get("trade_value"), "trade_number": b.get("trade_number"),
+        "market_value": b.get("market_value"),
+        "fara": n(f.get("index")), "fara_pct": n(f.get("index_change_percent")),
+        "fara_trade_value": f.get("trade_value"),
+    }
 
 
 def fetch_tradingview():
@@ -149,6 +172,12 @@ def main():
     except Exception as e:
         errors["bonbast"] = f"{type(e).__name__}: {str(e)[:150]}"
 
+    tse = old.get("tse")
+    try:
+        tse = fetch_tse()
+    except Exception as e:
+        errors["tablokhani"] = f"{type(e).__name__}: {str(e)[:150]}"
+
     world = old.get("world")
     try:
         tv = fetch_tradingview()
@@ -169,7 +198,7 @@ def main():
     cutoff = (datetime.now(timezone.utc) - timedelta(days=HISTORY_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
     history = [h for h in history if h["t"] >= cutoff]
     OUT.parent.mkdir(exist_ok=True)
-    OUT.write_text(json.dumps({"generated": now_iso(), "errors": errors, "iran": iran, "world": world,
+    OUT.write_text(json.dumps({"generated": now_iso(), "errors": errors, "iran": iran, "tse": tse, "world": world,
                                "history": history}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print("markets saved", errors or "OK")
     return 0

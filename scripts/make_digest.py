@@ -18,12 +18,13 @@ LANG = os.environ.get("DIGEST_LANG", "Persian (Farsi)")
 WINDOW_HOURS = 26
 
 SECTIONS = {
-    "new_world": "New companies, startups, funding rounds and new product ideas - outside Iran",
-    "new_iran": "New companies, startups, funding and new products/ideas - Iran",
-    "ai": "AI: notable launches, companies, research, policy",
+    "startups_world": "Startups, new companies, funding rounds and new products - outside Iran",
+    "startups_iran": "Startups, new companies, new products and investment - Iran",
+    "ai": "AI: notable launches, companies, research, policy (world and Iran)",
+    "tech": "Technology beyond AI (world and Iran)",
+    "industry": "Industry, manufacturing, energy, supply chains (world and Iran)",
     "economy_world": "World economy and markets",
     "economy_iran": "Iran economy, markets, currency, business",
-    "industry": "Industry, manufacturing, energy, supply chains (world and Iran)",
     "politics_world": "World politics",
     "politics_iran": "Iran politics and foreign relations",
 }
@@ -48,9 +49,21 @@ SCHEMA = {
             "required": list(SECTIONS),
             "additionalProperties": False,
         },
+        "ideas": {"type": "array", "items": {
+            "type": "object",
+            "properties": {
+                "title": {"type": "string"},
+                "what": {"type": "string"},
+                "why_now": {"type": "string"},
+                "iran_angle": {"type": "string"},
+                "refs": {"type": "array", "items": {"type": "integer"}},
+            },
+            "required": ["title", "what", "why_now", "iran_angle", "refs"],
+            "additionalProperties": False,
+        }},
         "watch": {"type": "string"},
     },
-    "required": ["headline", "top", "sections", "watch"],
+    "required": ["headline", "top", "sections", "ideas", "watch"],
     "additionalProperties": False,
 }
 
@@ -64,6 +77,11 @@ You get a numbered list of headlines from the last day. Using only that list:
   company/product, say what it does, who backs it and how much was raised when the headlines say so. Skip
   routine items (price ticks, minor sports/celebrity, duplicates). Merge stories covered by several sources into
   one bullet citing all of them. A section may be empty if nothing in the list fits.
+- "ideas": the reader wants to start a business and is collecting ideas. Give 3-5 concrete business ideas that
+  today's stories suggest - a product someone just launched or funded that has no equivalent yet in Iran, a gap a
+  story reveals, a trend that opens a new market. For each: a short "title", "what" the business would do,
+  "why_now" (what in today's news makes it timely), and "iran_angle" (how it could work in Iran's market,
+  including practical constraints such as sanctions, payments or regulation). Base them on the headlines and cite them.
 - "watch": 1-3 sentences on a trend or signal worth watching, drawn from the list.
 - Every bullet's "refs" lists the [numbers] of the headlines it is based on. Never invent facts beyond the headlines.
 
@@ -74,9 +92,9 @@ Bullets are one or two short sentences each."""
 def build_input(items):
     lines = []
     for n, it in enumerate(items):
-        summ = "" if it["cat"] == "politics" else it.get("summary", "")[:180]
+        summ = "" if it["topics"][0] == "politics" else it.get("summary", "")[:180]
         tags = f" #{' #'.join(it['tags'])}" if it.get("tags") else ""
-        lines.append(f"[{n}] ({it['region']}/{it['cat']}{tags}) {it['source']}: {it['title']}"
+        lines.append(f"[{n}] ({it['region']}/{','.join(it['topics'])}{tags}) {it['source']}: {it['title']}"
                      + (f" - {summ}" if summ else ""))
     return "\n".join(lines)
 
@@ -115,6 +133,8 @@ def main():
 
     brief["top"] = [resolve(b) for b in brief["top"]]
     brief["sections"] = {k: [resolve(b) for b in v] for k, v in brief["sections"].items()}
+    for idea in brief["ideas"]:
+        idea["links"] = resolve({"text": "", "refs": idea.pop("refs")})["links"]
     OUT.write_text(json.dumps({
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "model": response.model,
