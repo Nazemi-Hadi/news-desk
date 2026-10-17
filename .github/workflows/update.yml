@@ -6,7 +6,6 @@ on:
     - cron: "0 */3 * * *"    # every 3 hours - news + markets
     - cron: "15 * * * *"     # every hour - markets only
     - cron: "0 2 * * 1"      # Mondays - upcoming world events
-    - cron: "0 4 * * 5"      # Fridays - weekly trends
   push:
     branches: [main]         # redeploy when the code changes
   workflow_dispatch:
@@ -77,10 +76,16 @@ jobs:
         if: env.SCHEDULE == '0 2 * * 1' || inputs.events
         run: python scripts/make_events.py
         continue-on-error: true
-      - name: Weekly trends
-        if: env.SCHEDULE == '0 4 * * 5' || inputs.weekly
+      - name: Holidays (free public calendars)
+        if: env.SCHEDULE == '30 3 * * *' || env.EVENT == 'push'
+        run: python scripts/fetch_holidays.py
+        continue-on-error: true
+      - name: Weekly trends (numbers daily; AI report on Fridays if a key is set)
+        if: env.SCHEDULE == '30 3 * * *' || env.EVENT == 'push' || inputs.weekly
         run: python scripts/make_weekly.py
         continue-on-error: true
+        env:
+          WEEKLY_AI: ${{ inputs.weekly && '1' || '' }}
       - name: Deep-dive research
         if: inputs.research != '' || inputs.research_text != ''
         run: python scripts/deep_dive.py
@@ -90,6 +95,7 @@ jobs:
       - name: Build the site
         run: |
           mkdir -p _site
+          python -c "import json,os; json.dump({'ai': bool(os.environ.get('ANTHROPIC_API_KEY'))}, open('data/site.json','w'))"
           cp index.html sw.js manifest.webmanifest icon.svg icon-192.png icon-512.png _site/
           cp -r data _site/data
       - uses: actions/upload-pages-artifact@v3

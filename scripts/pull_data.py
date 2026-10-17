@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 FILES = ["news.json", "archive.json", "markets.json", "digest.json", "events.json", "ideas.json",
-         "reports.json", "weekly.json", "bazaar.json"]
+         "reports.json", "weekly.json", "bazaar.json", "holidays.json"]
 
 
 def site_url():

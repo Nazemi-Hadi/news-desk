@@ -1,7 +1,8 @@
-"""Weekly trends report (data/weekly.json) from the last 7 days of data/archive.json.
+"""Weekly trends (data/weekly.json) from the last 7 days of data/archive.json.
 
-Python counts stories per topic and tag and finds rising terms (this week against the week before); Claude
-reads the counts and this week's business and tech headlines and writes the trends with numbers.
+Python counts stories per topic and tag, finds rising terms (this week against the week before) and lists the
+week's funding, deal, launch and IPO headlines - free, every day. When ANTHROPIC_API_KEY is set and it is
+Friday (or WEEKLY_AI=1), Claude also writes the trends report with numbers.
 """
 import json
 import os
@@ -106,10 +107,16 @@ You get counts (this week vs last week) and this week's headlines, numbered. Usi
 Every item cites the [numbers] of its headlines in "refs". Write in {LANG}; keep company and product names in Latin script."""
 
 
+def highlights(this):
+    out = {}
+    for tag in ("funding", "m&a", "ipo", "launch", "earnings"):
+        hits = [i for i in this if tag in i.get("tags", []) and i["topics"][0] not in ("politics", "football")]
+        out[tag] = [{"title": i["title"], "link": i["link"], "source": i["source"], "region": i["region"], "date": i["date"]}
+                    for i in hits[:20]]
+    return out
+
+
 def main():
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        print("ANTHROPIC_API_KEY is not set; skipping the weekly report.")
-        return 0
     items = json.loads(ARCHIVE.read_text(encoding="utf-8"))["items"]
     now = datetime.now(timezone.utc)
     w1 = (now - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -117,6 +124,16 @@ def main():
     this = [i for i in items if i["date"] >= w1]
     last = [i for i in items if w2 <= i["date"] < w1]
     st = stats(this, last)
+    base = {"generated": now.strftime("%Y-%m-%dT%H:%M:%SZ"), "from": w1[:10], "to": now.strftime("%Y-%m-%d"),
+            "stories": len(this), "has_last_week": bool(last), "stats": st, "highlights": highlights(this)}
+    want_ai = os.environ.get("ANTHROPIC_API_KEY") and (now.weekday() == 4 or os.environ.get("WEEKLY_AI") == "1")
+    if not want_ai:
+        old = json.loads(OUT.read_text(encoding="utf-8")) if OUT.exists() else {}
+        recent = old.get("report") and old.get("report_date", "") >= (now - timedelta(days=7)).strftime("%Y-%m-%d")
+        base.update({"report": old["report"], "report_date": old["report_date"]} if recent else {"report": None})
+        OUT.write_text(json.dumps(base, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"Weekly numbers updated from {len(this)} stories (no AI report this run)")
+        return 0
     detail = [i for i in this if DETAIL_TOPICS & set(i["topics"])]
     lines = [f"[{n}] ({i['region']}/{','.join(i['topics'])}{' #' + ' #'.join(i['tags']) if i.get('tags') else ''}) "
              f"{i['source']}: {i['title']}" for n, i in enumerate(detail)]
@@ -143,9 +160,8 @@ def main():
         t["links"] = links(t.pop("refs"))
     for k in ("funding", "deals", "iran", "opportunities"):
         rep[k] = [{"text": b["text"], "links": links(b["refs"])} for b in rep[k]]
-    OUT.write_text(json.dumps({"generated": now.strftime("%Y-%m-%dT%H:%M:%SZ"), "from": w1[:10], "to": now.strftime("%Y-%m-%d"),
-                               "stories": len(this), "has_last_week": bool(last), "stats": st, "report": rep},
-                              ensure_ascii=False, indent=1), encoding="utf-8")
+    base.update({"report": rep, "report_date": now.strftime("%Y-%m-%d")})
+    OUT.write_text(json.dumps(base, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"Weekly report written from {len(this)} stories ({len(detail)} business/tech headlines)")
     return 0
 

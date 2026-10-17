@@ -351,7 +351,7 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
   var state = {
     view: load("view", "today"), region: load("region", "both"), unit: load("unit", "rial"), q: "",
     limit: { iran: PAGE, world: PAGE }, read: load("read", {}), saved: load("saved", {}),
-    lastVisit: load("lastVisit", null), news: null, digest: null, markets: null, events: null, evCat: "all", ideas: null, reports: null, weekly: null, bazaar: null,
+    lastVisit: load("lastVisit", null), news: null, digest: null, markets: null, events: null, holidays: null, ai: false, evCat: "all", ideas: null, reports: null, weekly: null, bazaar: null,
     ideaArea: "all", reportId: null, ratings: load("ratings", {}), pending: load("pending", {}),
     settings: load("settings", { repo: "", token: "" })
   };
@@ -433,9 +433,22 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
   }
   function parseYmd(s) { var a = s.split("-"); return new Date(+a[0], +a[1] - 1, +a[2]); }
   function jLabel(d) { var j = jparts(d); return j.d + " " + j.name + " " + j.y; }
+  function allEvents() {
+    var list = ((state.events && state.events.events) || []).slice(), seen = {};
+    list.forEach(function (e) { seen[e.date + "|" + e.title.toLowerCase()] = 1; });
+    ((state.holidays && state.holidays.events) || []).forEach(function (e) {
+      if (!seen[e.date + "|" + e.title.toLowerCase()]) list.push(e);
+    });
+    return list.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+  }
+  function holidayDays() {
+    var map = {};
+    ((state.holidays && state.holidays.events) || []).forEach(function (e) { if (e.official_holiday) map[e.date] = e.title; });
+    return map;
+  }
   function eventDays() {
     var map = {};
-    ((state.events && state.events.events) || []).forEach(function (e) {
+    allEvents().forEach(function (e) {
       var a = parseYmd(e.date), b = e.end_date ? parseYmd(e.end_date) : a;
       for (var d = new Date(a); d <= b && (d - a) < 40 * 86400000; d.setDate(d.getDate() + 1)) map[ymd(d)] = 1;
     });
@@ -449,15 +462,15 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
     while (jparts(d).m === tj.m && days.length < 31) { days.push(new Date(d)); d.setDate(d.getDate() + 1); }
     var last = days[days.length - 1];
     var gFirst = first.toLocaleDateString("en-US", { month: "short" }), gLast = last.toLocaleDateString("en-US", { month: "short", year: "numeric" });
-    var ev = eventDays();
+    var ev = eventDays(), hol = holidayDays();
     var html = '<div class="cal"><div class="cal-h"><b>' + tj.name + " " + tj.y + "</b><span>" + (gFirst === last.toLocaleDateString("en-US", { month: "short" }) ? gLast : gFirst + " - " + gLast) + "</span></div>" +
       '<div class="cal-today">' + today.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) + "</div>" +
       '<div class="cal-g">' + ["Sa", "Su", "Mo", "Tu", "We", "Th", "Fr"].map(function (w) { return '<div class="wd">' + w + "</div>"; }).join("");
     var lead = (first.getDay() + 1) % 7;
     for (var i = 0; i < lead; i++) html += "<div></div>";
     days.forEach(function (x) {
-      var key = ymd(x), cls = "d" + (x.getDay() === 5 ? " fri" : "") + (key === ymd(today) ? " now" : "") + (ev[key] ? " ev" : "");
-      html += '<div class="' + cls + '"' + (ev[key] ? ' data-view="events" title="Events on this day"' : "") + "><b>" + jparts(x).d + "</b><i>" + x.getDate() + "</i></div>";
+      var key = ymd(x), cls = "d" + (x.getDay() === 5 || hol[key] ? " fri" : "") + (key === ymd(today) ? " now" : "") + (ev[key] ? " ev" : "");
+      html += '<div class="' + cls + '"' + (ev[key] ? ' data-view="events" title="' + esc(hol[key] || "Events on this day") + '"' : "") + "><b>" + jparts(x).d + "</b><i>" + x.getDate() + "</i></div>";
     });
     return html + "</div></div>";
   }
@@ -468,18 +481,19 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
   }
   function upcoming(days) {
     var now = ymd(new Date()), until = ymd(new Date(Date.now() + days * 86400000));
-    return ((state.events && state.events.events) || []).filter(function (e) {
+    return allEvents().filter(function (e) {
       return (e.end_date || e.date) >= now && e.date <= until;
     });
   }
   function renderEvents() {
     var html = '<header class="ph" style="--accent:var(--c-events)"><div><div class="kicker" style="color:' + color("events") + '">Calendar</div><h1>World events</h1>' +
       "<p>Important scheduled events, ceremonies and holidays in the coming weeks - politics, economy, tech, sport and culture, in Iran and worldwide. Researched weekly with web search.</p></div></header>";
-    if (!state.events) return html + '<div class="notice">The events calendar starts once the site runs on GitHub with the Claude API key; it is refreshed every Monday.</div>';
+    if (!state.events && !state.holidays) return html + '<div class="notice">No calendar data yet.</div>';
+    if (!state.events) html += '<div class="notice" style="margin-bottom:16px">Showing holidays and observances from public calendars. Summits, elections, central-bank meetings and big launches are added automatically if a Claude API key is ever set.</div>';
     html += '<div class="chips" style="margin-bottom:16px">' + EV_CATS.map(function (c) {
       return '<button class="chip' + (state.evCat === c ? " on" : "") + '" data-evcat="' + c + '">' + (c === "all" ? "All" : c.charAt(0).toUpperCase() + c.slice(1)) + "</button>";
     }).join("") + "</div>";
-    var list = upcoming(60).filter(function (e) { return state.evCat === "all" || e.category === state.evCat; });
+    var list = upcoming(120).filter(function (e) { return state.evCat === "all" || e.category === state.evCat; });
     if (!list.length) return html + '<div class="empty">No events in this category.</div>';
     var lastMonth = null, body = "";
     list.forEach(function (e) {
@@ -491,6 +505,47 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
         "<h3>" + esc(e.title) + "</h3><p>" + esc(e.why) + "</p>" + (e.url ? '<a class="src" href="' + esc(e.url) + '" target="_blank" rel="noopener" dir="ltr">Source</a>' : "") + "</div></div>";
     });
     return html + body + "</div>";
+  }
+
+  // ---------- prompts for the reader's own Claude ----------
+  var PROMPT_ORDER = ["startups", "fintech", "giants", "ai", "research", "tech", "economy", "industry", "politics"];
+  function headlineLines(topics, hours, perTopic) {
+    var since = new Date(Date.now() - hours * 3600000).toISOString(), lines = [], used = {};
+    topics.forEach(function (t) {
+      var n = 0;
+      state.news.items.forEach(function (it) {
+        if (n >= perTopic || used[it.id] || it.date < since || it.topics[0] !== t && !(t !== "politics" && inTopic(it, t))) return;
+        used[it.id] = 1; n++;
+        lines.push("- [" + t + "/" + it.region + "] " + it.source + ": " + it.title);
+      });
+    });
+    return lines;
+  }
+  function openClaude(intro, lines, statusEl) {
+    var full = intro + "\n\nHeadlines:\n" + lines.join("\n");
+    var short = intro + "\n\nHeadlines:\n", i = 0;
+    while (i < lines.length && encodeURIComponent(short + lines[i] + "\n").length < 7000) { short += lines[i] + "\n"; i++; }
+    var done = function (copied) {
+      if (statusEl) statusEl.textContent = copied
+        ? "Opened Claude with " + i + " of " + lines.length + " headlines. The full prompt is also copied - paste it if you want all of them."
+        : "Opened Claude with " + i + " headlines.";
+    };
+    window.open("https://claude.ai/new?q=" + encodeURIComponent(short), "_blank", "noopener");
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(full).then(function () { done(true); }, function () { done(false); });
+    else done(false);
+  }
+  function briefMe(statusEl) {
+    var intro = "These are the last 24 hours of headlines from my news dashboard. Answer in Persian and keep company and product names in English.\n" +
+      "1) The 10-15 most important developments, grouped by topic (startups, fintech, big companies and M&A, AI, tech, economy, industry, politics) and kept separate for Iran and the world.\n" +
+      "2) 4-6 business ideas I could start in Iran. Each must be based on a real company outside Iran that, per these headlines, just launched something or raised money: name the company and what it did, then the Iranian version, why now, and practical constraints in Iran (sanctions, payments, licences).\n" +
+      "3) One trend worth watching.";
+    openClaude(intro, headlineLines(PROMPT_ORDER, 24, 25), statusEl);
+  }
+  function topicIdeas(t, statusEl) {
+    var intro = "These are the latest " + t.label + " headlines from my news dashboard. Answer in Persian and keep company and product names in English.\n" +
+      "1) Summarise the most important developments, separately for Iran and the world.\n" +
+      "2) Give 3-5 business ideas I could start in Iran. Each must be based on a real company outside Iran that, per these headlines, just launched something or raised money: name the company and what it did, then the Iranian version, why now, and practical constraints in Iran (sanctions, payments, licences).";
+    openClaude(intro, headlineLines([t.id], 72, 60), statusEl);
   }
 
   // ---------- idea bank & research ----------
@@ -513,6 +568,7 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
     var pend = state.pending[x.id] && (Date.now() - state.pending[x.id] < 30 * 60000);
     return '<div class="idea-actions" dir="ltr"><span class="rate">' + stars + "</span>" +
       (has ? '<button class="btn primary" data-report="' + x.id + '">Read report</button>'
+        : !state.ai ? ""
         : pend ? '<span class="status">Researching&hellip; usually 5-10 minutes</span>'
           : '<button class="btn primary" data-research="' + x.id + '">Research this</button>') +
       '<a class="btn" href="' + esc(claudeLink(x)) + '" target="_blank" rel="noopener">Ask Claude</a></div>';
@@ -558,6 +614,7 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
       });
       html += "</div>";
     }
+    if (!state.ai) return html;
     var s = state.settings;
     html += '<details class="card settings" id="settings" style="margin-top:22px"><summary>Research settings</summary>' +
       "<p>The Research button asks GitHub to run the research workflow, which uses the site's Claude API key and adds the report here (5-10 minutes; each report costs roughly half a dollar to a dollar of API usage). " +
@@ -605,9 +662,11 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
     var w = state.weekly;
     var html = '<header class="ph" style="--accent:var(--c-weekly)"><div><div class="kicker" style="color:' + color("weekly") + '">Every Friday</div><h1>Weekly trends</h1>' +
       "<p>What gained momentum this week across startups, fintech, AI, big companies and the economy - counted from every headline, with the numbers behind each trend.</p></div></header>";
-    if (!w) return html + '<div class="notice">The first weekly report is written on Friday once the site runs on GitHub with the Claude API key (it needs a few days of collected news).</div>';
+    if (!w) return html + '<div class="notice">The weekly numbers appear after the first daily update.</div>';
     var r = w.report, st = w.stats;
-    html += '<div class="card"><div class="meta" dir="ltr"><span class="src">' + esc(w.from) + " &ndash; " + esc(w.to) + "</span><span>&middot;</span><span>" + w.stories + ' stories</span></div><p class="brief-hl"' + dirOf(r.headline) + ">" + esc(r.headline) + "</p></div>";
+    html += '<div class="card"><div class="meta" dir="ltr"><span class="src">' + esc(w.from) + " &ndash; " + esc(w.to) + "</span><span>&middot;</span><span>" + w.stories + " stories</span>" +
+      (w.has_last_week ? "" : "<span>&middot;</span><span>comparison with last week starts after 7 days of collected news</span>") + "</div>" +
+      (r ? '<p class="brief-hl"' + dirOf(r.headline) + ">" + esc(r.headline) + "</p>" : "") + "</div>";
     var tagNames = { funding: "Funding rounds", "m&a": "Acquisitions & mergers", launch: "Launches", ipo: "IPOs & valuations", earnings: "Earnings" };
     html += sectionTitle("This week in numbers", color("weekly")) + '<div class="stat-chips">' + Object.keys(tagNames).filter(function (k) { return st.tags[k]; }).map(function (k) {
       var v = st.tags[k], diff = v[0] - v[1];
@@ -619,6 +678,17 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
     if (st.rising && st.rising.length) html += sectionTitle("Rising words", color("weekly")) + '<div class="stat-chips">' + st.rising.map(function (t) {
       return '<span class="term"' + dirOf(t.term) + ">" + esc(t.term) + " <small>" + t.this + (w.has_last_week ? " / " + t.last : "") + "</small></span>";
     }).join("") + "</div>";
+    var hl = w.highlights || {};
+    [["funding", "Funding rounds this week", "startups"], ["m&a", "Acquisitions & mergers this week", "giants"], ["ipo", "IPOs & valuations this week", "economy"],
+     ["launch", "Launches this week", "ai"], ["earnings", "Earnings this week", "giants"]].forEach(function (k) {
+      var list = hl[k[0]] || [];
+      if (!list.length) return;
+      html += sectionTitle(k[1] + " (" + list.length + ")", color(k[2])) + '<div class="card" style="padding:4px 18px">' + list.map(function (it) {
+        return '<div class="row"' + dirOf(it.title) + '><div class="txt"><div class="meta"><span class="pill ' + it.region + '">' + (it.region === "iran" ? "Iran" : "World") + '</span><span class="src">' + esc(it.source) + "</span><span>&middot;</span><span>" + ago(it.date) + "</span></div>" +
+          '<a href="' + esc(it.link) + '" target="_blank" rel="noopener"><h3 class="serif-h">' + esc(it.title) + "</h3></a></div></div>";
+      }).join("") + "</div>";
+    });
+    if (!r) return html;
     html += sectionTitle("Trends", color("weekly")) + '<div class="ideas">' + r.trends.map(function (t) {
       return '<div class="card trend" style="--accent:' + color(t.topic) + '"' + dirOf(t.title) + '><div class="area" dir="ltr" style="color:' + color(t.topic) + '">' + esc((TOPIC[t.topic] || {}).label || t.topic) + "</div><h3>" + esc(t.title) + '</h3><div class="num">' + esc(t.numbers) + "</div><p>" + esc(t.detail) + "</p>" +
         (t.links && t.links.length ? '<div class="refs" dir="ltr">' + refsHtml(t.links) + "</div>" : "") + "</div>";
@@ -704,10 +774,10 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
     var srcs = state.news.sources.filter(function (s) { return s.topic === t.id; }).map(function (s) { return s.name; });
     var html = '<header class="ph" style="--accent:' + color(t.id) + '"><div><div class="kicker" style="color:' + color(t.id) + '">Topic</div><h1>' + t.label + "</h1><p>" + t.desc +
       " Sources: " + esc(srcs.join(", ")) + ".</p></div>" +
-      '<div class="tools"><input class="search" id="q" type="search" placeholder="Search ' + esc(t.label) + '" value="' + esc(state.q) + '">' +
+      '<div class="tools"><button class="btn primary" data-topic-ideas="' + t.id + '">Ideas in Claude</button><input class="search" id="q" type="search" placeholder="Search ' + esc(t.label) + '" value="' + esc(state.q) + '">' +
       '<div class="seg">' + ["both", "world", "iran"].map(function (r) {
         return '<button data-region="' + r + '" class="' + (state.region === r ? "on" : "") + '">' + { both: "Both", world: "World", iran: "Iran" }[r] + "</button>";
-      }).join("") + "</div></div></header>";
+      }).join("") + '</div></div><div class="status" id="topic-status" style="width:100%"></div></header>';
     if (!q) html += topicBrief(t);
     if (!q && t.id === "giants") html += giantsTable() + '<div style="height:26px"></div>';
     var hasIran = state.news.sources.some(function (s) { return s.topic === t.id && s.region === "iran"; }) || iran.length;
@@ -779,7 +849,8 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
     var d = state.digest;
     var html = '<header class="ph" style="--accent:#f97316"><div><div class="kicker" style="color:var(--muted)">' +
       new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" }) +
-      "</div><h1>Today</h1><p>The day's brief, business ideas drawn from the news, and the top stories in every topic.</p></div></header>";
+      "</div><h1>Today</h1><p>The day's brief, business ideas drawn from the news, and the top stories in every topic.</p></div>" +
+      '<div class="tools"><button class="btn primary" id="brief-me">Brief me in Claude</button></div><div class="status" id="brief-status" style="width:100%"></div></header>';
     if (d && d.brief) {
       var b = d.brief;
       html += '<div class="card"><div class="meta"><span class="src">Daily brief</span><span>&middot;</span><span>' + ago(d.generated) + "</span><span>&middot;</span><span>" + d.items_considered + " stories read</span></div>" +
@@ -798,7 +869,7 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
       }
       if (b.watch) html += sectionTitle("Worth watching", "var(--c-markets)") + '<div class="card"><div' + dirOf(b.watch) + ' style="line-height:1.9">' + esc(b.watch) + "</div></div>";
     } else {
-      html += '<div class="notice">The written daily brief and the idea radar start once the site runs on GitHub with the Claude API key. Below are the latest stories from every topic.</div>';
+      html += '<div class="notice">Press <b>Brief me in Claude</b> for today\'s summary and business ideas: it opens Claude (your own account, no extra cost) with today\'s headlines and the instructions already written. On each topic page, <b>Ideas in Claude</b> does the same for that topic.</div>';
     }
     var soon = upcoming(7);
     if (soon.length) {
@@ -962,6 +1033,9 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
     if (r) { state.region = r.getAttribute("data-region"); save("region", state.region); render(); return; }
     var u = e.target.closest("[data-unit]");
     if (u) { state.unit = u.getAttribute("data-unit"); save("unit", state.unit); render(); return; }
+    if (e.target.id === "brief-me") { briefMe(document.getElementById("brief-status")); return; }
+    var ti = e.target.closest("[data-topic-ideas]");
+    if (ti) { topicIdeas(TOPIC[ti.getAttribute("data-topic-ideas")], document.getElementById("topic-status")); return; }
     var ar = e.target.closest("[data-area]");
     if (ar) { state.ideaArea = ar.getAttribute("data-area"); render(); return; }
     var rt = e.target.closest("[data-rate]");
@@ -984,6 +1058,7 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
     if (e.target.id === "research-mine") {
       var txt = (document.getElementById("myidea").value || "").trim(), ms = document.getElementById("mine-status");
       if (txt.length < 15) { ms.textContent = "Write a sentence or two first."; return; }
+      if (!state.ai) { window.open(claudeLink({ title: txt }), "_blank", "noopener"); ms.textContent = "Opened in Claude."; return; }
       e.target.disabled = true; ms.textContent = "Starting...";
       dispatch({ research_text: txt }, function (err) {
         e.target.disabled = false;
@@ -1027,8 +1102,11 @@ textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Int
       getJson("data/ideas.json", bust).catch(function () { return null; }),
       getJson("data/reports.json", bust).catch(function () { return null; }),
       getJson("data/weekly.json", bust).catch(function () { return null; }),
-      getJson("data/bazaar.json", bust).catch(function () { return null; })
+      getJson("data/bazaar.json", bust).catch(function () { return null; }),
+      getJson("data/holidays.json", bust).catch(function () { return null; }),
+      getJson("data/site.json", bust).catch(function () { return null; })
     ]).then(function (res) {
+      state.holidays = res[8]; state.ai = !!(res[9] && res[9].ai);
       state.news = res[0]; state.digest = res[1]; state.markets = res[2]; state.events = res[3];
       state.ideas = res[4]; state.reports = res[5]; state.weekly = res[6]; state.bazaar = res[7];
       var reps = (state.reports && state.reports.reports) || {};
