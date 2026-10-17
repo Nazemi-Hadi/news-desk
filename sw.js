@@ -1,5 +1,5 @@
 // Shell: stale-while-revalidate. Data: network first, cached copy when offline.
-var CACHE = "news-desk-v1";
+var CACHE = "news-desk-v2";
 var SHELL = ["./", "index.html", "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", function (e) {

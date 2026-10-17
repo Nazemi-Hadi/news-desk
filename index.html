@@ -117,6 +117,24 @@ th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--lin
 th { font-size: 12px; color: var(--muted); font-weight: 600; }
 .ok { color: var(--new); } .err { color: #dc2626; }
 .tablewrap { overflow-x: auto; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.kpi .k { font-size: 12px; color: var(--muted); }
+.kpi .v { font-size: 19px; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.kpi .c { font-size: 12px; margin-top: 2px; }
+.up { color: var(--new); } .down { color: #dc2626; } .flat { color: var(--muted); }
+.mkt { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mkt h3 { font-size: 13px; margin: 0 0 6px; color: var(--muted); font-weight: 600; }
+.mkt table { border: 0; }
+.mkt td.num, .mkt th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mkt .note { color: var(--muted); font-size: 11px; margin-left: 4px; }
+.mkt-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 18px 0 10px; }
+.mkt-head h2 { font-size: 16px; margin: 0; }
+.mkt-head .meta { margin-left: auto; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: var(--card); padding: 4px 10px; font-size: 13px; cursor: pointer; }
+.seg button.on { background: var(--ink); color: var(--bg); }
+@media (max-width: 720px) { .mkt { grid-template-columns: 1fr; } .kpi .v { font-size: 17px; } }
 @media (max-width: 720px) {
   .cols { grid-template-columns: 1fr; }
   .updated { font-size: 12px; }
@@ -144,6 +162,7 @@ th { font-size: 12px; color: var(--muted); font-weight: 600; }
   "use strict";
   var TABS = [
     { id: "brief", label: "Daily Brief" },
+    { id: "markets", label: "Markets" },
     { id: "iran", label: "Iran" },
     { id: "world", label: "World" },
     { id: "saved", label: "Saved" },
@@ -188,6 +207,8 @@ th { font-size: 12px; color: var(--muted); font-weight: 600; }
     saved: load("saved", {}),
     lastVisit: load("lastVisit", null),
     news: null,
+    markets: null,
+    unit: load("unit", "rial"),
     digest: null
   };
   var thisVisit = new Date().toISOString();
@@ -328,6 +349,85 @@ th { font-size: 12px; color: var(--muted); font-weight: 600; }
     return out + "</div>";
   }
 
+  function chg(c, suffix) {
+    if (c === null || c === undefined) return '<span class="flat">&ndash;</span>';
+    var cls = c > 0 ? "up" : (c < 0 ? "down" : "flat");
+    return '<span class="' + cls + '">' + (c > 0 ? "+" : "") + c.toFixed(2) + "%" + (suffix || "") + "</span>";
+  }
+  function fmt(n, digits) {
+    if (n === null || n === undefined) return "&ndash;";
+    return Number(n).toLocaleString("en-US", { maximumFractionDigits: digits === undefined ? 2 : digits });
+  }
+  function irr(toman) {
+    if (toman === null || toman === undefined) return "&ndash;";
+    return fmt(state.unit === "rial" ? toman * 10 : toman, 0);
+  }
+  function renderMarkets() {
+    var m = state.markets;
+    if (!m) return '<div class="notice">Market data is not available yet.</div>';
+    var unitName = state.unit === "rial" ? "Rial" : "Toman";
+    var ir = m.iran, wd = m.world, out = "";
+    function findIr(key) {
+      var hit = null;
+      if (!ir) return null;
+      ir.groups.concat([{ rows: ir.extra }]).forEach(function (g) { g.rows.forEach(function (r) { if (r.key === key) hit = r; }); });
+      return hit;
+    }
+    function findW(sym) {
+      var hit = null;
+      if (!wd) return null;
+      wd.groups.forEach(function (g) { g.rows.forEach(function (r) { if (r.sym === sym) hit = r; }); });
+      return hit;
+    }
+    var kp = [];
+    var usd = findIr("usd"), emami = findIr("emami1"), g18 = findIr("gol18"), tse = findIr("bourse");
+    var brent = findW("ICEEUR:BRN1!"), gold = findW("TVC:GOLD"), spx = findW("SP:SPX");
+    if (usd) kp.push(["US Dollar (" + unitName + ")", irr(usd.sell), usd.change, " 24h"]);
+    if (emami) kp.push(["Emami coin (" + unitName + ")", irr(emami.sell), emami.change, " 24h"]);
+    if (g18) kp.push(["18k gold / gram (" + unitName + ")", irr(g18.sell), g18.change, " 24h"]);
+    if (tse) kp.push(["Tehran Stock Exchange", fmt(tse.value, 0), tse.change, " 24h"]);
+    if (brent) kp.push(["Brent crude ($)", fmt(brent.price), brent.change, " day"]);
+    if (gold) kp.push(["Gold ounce ($)", fmt(gold.price, 0), gold.change, " day"]);
+    if (spx) kp.push(["S&amp;P 500", fmt(spx.price, 0), spx.change, " day"]);
+    out += '<div class="kpis">' + kp.map(function (k) {
+      return '<div class="kpi"><div class="k">' + k[0] + '</div><div class="v">' + k[1] + '</div><div class="c">' + chg(k[2], k[3]) + "</div></div>";
+    }).join("") + "</div>";
+
+    var errs = m.errors || {};
+    out += '<div class="mkt-head"><h2>Iran open market</h2><span class="region iran">Iran</span>' +
+      '<div class="seg"><button data-unit="rial" class="' + (state.unit === "rial" ? "on" : "") + '">Rial</button>' +
+      '<button data-unit="toman" class="' + (state.unit === "toman" ? "on" : "") + '">Toman</button></div>' +
+      '<div class="meta">' + (ir ? "Bonbast &middot; " + esc(ir.updated || "") + " (Tehran)" : "") +
+      (errs.bonbast ? ' &middot; <span class="err" title="' + esc(errs.bonbast) + '">last update failed</span>' : "") + "</div></div>";
+    if (ir) {
+      out += '<div class="mkt">';
+      ir.groups.forEach(function (g) {
+        out += '<section class="sec"><h3>' + esc(g.title) + " (" + unitName + ')</h3><div class="tablewrap"><table><thead><tr><th>Name</th><th class="num">Sell</th><th class="num">Buy</th><th class="num">24h</th></tr></thead><tbody>' +
+          g.rows.map(function (r) {
+            return "<tr><td>" + esc(r.label) + (r.note ? '<span class="note">' + esc(r.note) + "</span>" : "") + '</td><td class="num">' + irr(r.sell) + '</td><td class="num">' + irr(r.buy) + '</td><td class="num">' + chg(r.change) + "</td></tr>";
+          }).join("") + "</tbody></table></div></section>";
+      });
+      out += '<section class="sec"><h3>Other</h3><div class="tablewrap"><table><thead><tr><th>Name</th><th class="num">Value</th><th class="num">24h</th></tr></thead><tbody>' +
+        ir.extra.map(function (r) {
+          return "<tr><td>" + esc(r.label) + '<span class="note">' + esc(r.note) + '</span></td><td class="num">' + fmt(r.value, r.key === "bourse" ? 0 : 2) + '</td><td class="num">' + chg(r.change) + "</td></tr>";
+        }).join("") + "</tbody></table></div></section></div>";
+    }
+
+    out += '<div class="mkt-head"><h2>World markets</h2><span class="region world">World</span><div class="meta">' +
+      (wd ? "TradingView &middot; " + ago(wd.fetched) : "") +
+      (errs.tradingview ? ' &middot; <span class="err" title="' + esc(errs.tradingview) + '">last update failed</span>' : "") + "</div></div>";
+    if (wd) {
+      out += '<div class="mkt">' + wd.groups.map(function (g) {
+        return '<section class="sec"><h3>' + esc(g.title) + '</h3><div class="tablewrap"><table><thead><tr><th>Name</th><th class="num">Price</th><th class="num">Day</th></tr></thead><tbody>' +
+          g.rows.map(function (r) {
+            return "<tr><td>" + esc(r.label) + '</td><td class="num">' + fmt(r.price, r.price < 10 ? 4 : 2) + (r.currency && r.currency !== "USD" ? '<span class="note">' + esc(r.currency) + "</span>" : "") + '</td><td class="num">' + chg(r.change) + "</td></tr>";
+          }).join("") + "</tbody></table></div></section>";
+      }).join("") + "</div>";
+    }
+    out += '<p class="meta" style="margin-top:14px">Iran rates are open-market prices from bonbast.com; their 24h change is measured against our own reading from about a day earlier, so it appears after the first day. World prices are from TradingView (oil = front-month ICE Brent and NYMEX WTI futures) and may be delayed.</p>';
+    return out;
+  }
+
   function renderSources() {
     var s = state.news.sources.slice().sort(function (a, b) { return a.region === b.region ? (a.cat < b.cat ? -1 : 1) : (a.region < b.region ? -1 : 1); });
     return '<div class="tablewrap"><table><thead><tr><th>Source</th><th>Region</th><th>Section</th><th>Status</th><th>Stories</th></tr></thead><tbody>' +
@@ -344,6 +444,7 @@ th { font-size: 12px; color: var(--muted); font-weight: 600; }
     var html;
     if (state.tab === "brief") html = renderBrief();
     else if (state.tab === "sources") html = renderSources();
+    else if (state.tab === "markets") html = renderMarkets();
     else html = renderList(state.tab);
     main.innerHTML = html;
     var q = document.getElementById("q");
@@ -372,6 +473,8 @@ th { font-size: 12px; color: var(--muted); font-weight: 600; }
       }
       save("saved", state.saved); render(); return;
     }
+    var u = e.target.closest("[data-unit]");
+    if (u) { state.unit = u.getAttribute("data-unit"); save("unit", state.unit); render(); return; }
     if (e.target.id === "more") { state.limit += PAGE; render(); return; }
     var a = e.target.closest("a.title");
     if (a) {
@@ -404,9 +507,10 @@ th { font-size: 12px; color: var(--muted); font-weight: 600; }
     document.getElementById("updated").textContent = "Loading\u2026";
     Promise.all([
       getJson("data/news.json", bust),
-      getJson("data/digest.json", bust).catch(function () { return null; })
+      getJson("data/digest.json", bust).catch(function () { return null; }),
+      getJson("data/markets.json", bust).catch(function () { return null; })
     ]).then(function (res) {
-      state.news = res[0]; state.digest = res[1];
+      state.news = res[0]; state.digest = res[1]; state.markets = res[2];
       // forget read marks for stories that dropped out of the 3-day window
       var ids = {}; state.news.items.forEach(function (it) { ids[it.id] = 1; });
       Object.keys(state.read).forEach(function (k) { if (!ids[k]) delete state.read[k]; });
