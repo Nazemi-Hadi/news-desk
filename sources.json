@@ -1,53 +1,472 @@
 [
-  {"name": "BBC World", "url": "https://feeds.bbci.co.uk/news/world/rss.xml", "region": "world", "topic": "politics"},
-  {"name": "Guardian World", "url": "https://www.theguardian.com/world/rss", "region": "world", "topic": "politics", "skip": "/football/|/sport/"},
-  {"name": "Al Jazeera", "url": "https://www.aljazeera.com/xml/rss/all.xml", "region": "world", "topic": "politics", "skip": "/sports/"},
-  {"name": "NPR World", "url": "https://feeds.npr.org/1004/rss.xml", "region": "world", "topic": "politics"},
-  {"name": "BBC Persian", "url": "https://feeds.bbci.co.uk/persian/rss.xml", "region": "iran", "topic": "politics"},
-  {"name": "Iran International", "url": "https://www.iranintl.com/fa/feed", "region": "iran", "topic": "politics", "max": 30},
-  {"name": "Euronews Persian", "url": "https://per.euronews.com/rss", "region": "iran", "topic": "politics", "max": 30},
-
-  {"name": "BBC Business", "url": "https://feeds.bbci.co.uk/news/business/rss.xml", "region": "world", "topic": "economy"},
-  {"name": "Bloomberg Markets", "url": "https://feeds.bloomberg.com/markets/news.rss", "region": "world", "topic": "economy"},
-  {"name": "Financial Times", "url": "https://www.ft.com/rss/home", "region": "world", "topic": "economy"},
-  {"name": "CNBC Economy", "url": "https://www.cnbc.com/id/20910258/device/rss/rss.html", "region": "world", "topic": "economy"},
-  {"name": "Guardian Business", "url": "https://www.theguardian.com/business/rss", "region": "world", "topic": "economy"},
-  {"name": "The Economist", "url": "https://www.economist.com/finance-and-economics/rss.xml", "region": "world", "topic": "economy", "max": 12},
-  {"name": "Donya-e-Eqtesad", "url": "https://donya-e-eqtesad.com/feeds/", "region": "iran", "topic": "economy"},
-  {"name": "Eghtesad Online", "url": "https://www.eghtesadonline.com/fa/rss/allnews", "region": "iran", "topic": "economy", "max": 40},
-  {"name": "Tejarat News", "url": "https://www.tejaratnews.com/feed", "region": "iran", "topic": "economy", "max": 40},
-
-  {"name": "The Verge", "url": "https://www.theverge.com/rss/index.xml", "region": "world", "topic": "tech"},
-  {"name": "Ars Technica", "url": "https://feeds.arstechnica.com/arstechnica/index", "region": "world", "topic": "tech"},
-  {"name": "Wired", "url": "https://www.wired.com/feed/rss", "region": "world", "topic": "tech"},
-  {"name": "Rest of World", "url": "https://restofworld.org/feed/latest", "region": "world", "topic": "tech"},
-  {"name": "TNW", "url": "https://thenextweb.com/feed?category=fintech", "region": "world", "topic": "tech"},
-  {"name": "Zoomit", "url": "https://www.zoomit.ir/feed/", "region": "iran", "topic": "tech"},
-  {"name": "Digiato", "url": "https://digiato.com/feed", "region": "iran", "topic": "tech"},
-
-  {"name": "TechCrunch AI", "url": "https://techcrunch.com/category/artificial-intelligence/feed/", "region": "world", "topic": "ai"},
-  {"name": "MIT Technology Review", "url": "https://www.technologyreview.com/feed/", "region": "world", "topic": "ai"},
-  {"name": "VentureBeat AI", "url": "https://venturebeat.com/category/ai/feed/", "region": "world", "topic": "ai"},
-  {"name": "The Decoder", "url": "https://the-decoder.com/feed/", "region": "world", "topic": "ai"},
-  {"name": "Digiato AI", "url": "https://digiato.com/topic/artificial-intelligence/feed", "region": "iran", "topic": "ai"},
-
-  {"name": "Manufacturing Dive", "url": "https://www.manufacturingdive.com/feeds/news/", "region": "world", "topic": "industry"},
-  {"name": "Supply Chain Dive", "url": "https://www.supplychaindive.com/feeds/news/", "region": "world", "topic": "industry"},
-  {"name": "Utility Dive", "url": "https://www.utilitydive.com/feeds/news/", "region": "world", "topic": "industry"},
-  {"name": "OilPrice.com", "url": "https://oilprice.com/rss/main", "region": "world", "topic": "industry"},
-  {"name": "Shana", "url": "https://www.shana.ir/rss", "region": "iran", "topic": "industry"},
-
-  {"name": "TechCrunch Startups", "url": "https://techcrunch.com/category/startups/feed/", "region": "world", "topic": "startups"},
-  {"name": "TechCrunch Venture", "url": "https://techcrunch.com/category/venture/feed/", "region": "world", "topic": "startups"},
-  {"name": "Crunchbase News", "url": "https://news.crunchbase.com/feed/", "region": "world", "topic": "startups"},
-  {"name": "Sifted", "url": "https://sifted.eu/feed", "region": "world", "topic": "startups"},
-  {"name": "Y Combinator Blog", "url": "https://www.ycombinator.com/blog/rss/", "region": "world", "topic": "startups"},
-  {"name": "Fast Company", "url": "https://www.fastcompany.com/latest/rss", "region": "world", "topic": "startups"},
-  {"name": "Inc.", "url": "https://www.inc.com/rss/", "region": "world", "topic": "startups"},
-  {"name": "The Daily Star Startups", "url": "https://www.thedailystar.net/business/startups/rss.xml", "region": "world", "topic": "startups"},
-  {"name": "Wamda", "url": "https://www.wamda.com/feed", "region": "world", "topic": "startups"},
-  {"name": "Product Hunt", "url": "https://www.producthunt.com/feed", "region": "world", "topic": "startups", "max": 20},
-  {"name": "Show HN", "url": "https://hnrss.org/show?points=100", "region": "world", "topic": "startups"},
-  {"name": "Peivast", "url": "https://www.peivast.com/feed", "region": "iran", "topic": "startups"},
-  {"name": "TechRasa", "url": "https://techrasa.com/feed/", "region": "iran", "topic": "startups"}
+ {
+  "name": "BBC World",
+  "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+  "region": "world",
+  "topic": "politics",
+  "max": 12
+ },
+ {
+  "name": "New York Times World",
+  "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+  "region": "world",
+  "topic": "politics",
+  "max": 15
+ },
+ {
+  "name": "New York Times Politics",
+  "url": "https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml",
+  "region": "world",
+  "topic": "politics",
+  "max": 10
+ },
+ {
+  "name": "Financial Times World",
+  "url": "https://www.ft.com/world?format=rss",
+  "region": "world",
+  "topic": "politics",
+  "max": 15
+ },
+ {
+  "name": "Wall Street Journal World",
+  "url": "https://feeds.a.dj.com/rss/RSSWorldNews.xml",
+  "region": "world",
+  "topic": "politics",
+  "max": 12
+ },
+ {
+  "name": "CNN",
+  "url": "https://news.google.com/rss/search?q=site:cnn.com/2026+world+when:1d&hl=en-US&gl=US&ceid=US:en",
+  "region": "world",
+  "topic": "politics",
+  "max": 15,
+  "gnews": true
+ },
+ {
+  "name": "Reuters",
+  "url": "https://news.google.com/rss/search?q=site:reuters.com/world+when:1d&hl=en-US&gl=US&ceid=US:en",
+  "region": "world",
+  "topic": "politics",
+  "max": 15,
+  "gnews": true
+ },
+ {
+  "name": "Politico",
+  "url": "https://rss.politico.com/politics-news.xml",
+  "region": "world",
+  "topic": "politics",
+  "max": 10
+ },
+ {
+  "name": "Politico Europe",
+  "url": "https://www.politico.eu/feed/",
+  "region": "world",
+  "topic": "politics",
+  "max": 10
+ },
+ {
+  "name": "France 24",
+  "url": "https://www.france24.com/en/rss",
+  "region": "world",
+  "topic": "politics",
+  "max": 12,
+  "skip": "/sport/"
+ },
+ {
+  "name": "DW",
+  "url": "https://rss.dw.com/rdf/rss-en-world",
+  "region": "world",
+  "topic": "politics",
+  "max": 10
+ },
+ {
+  "name": "Sky News World",
+  "url": "https://feeds.skynews.com/feeds/rss/world.xml",
+  "region": "world",
+  "topic": "politics",
+  "max": 12
+ },
+ {
+  "name": "CBS News World",
+  "url": "https://www.cbsnews.com/latest/rss/world",
+  "region": "world",
+  "topic": "politics",
+  "max": 10
+ },
+ {
+  "name": "Foreign Policy",
+  "url": "https://foreignpolicy.com/feed/",
+  "region": "world",
+  "topic": "politics",
+  "max": 10
+ },
+ {
+  "name": "The Economist International",
+  "url": "https://www.economist.com/international/rss.xml",
+  "region": "world",
+  "topic": "politics",
+  "max": 8
+ },
+ {
+  "name": "Guardian World",
+  "url": "https://www.theguardian.com/world/rss",
+  "region": "world",
+  "topic": "politics",
+  "skip": "/football/|/sport/",
+  "max": 12
+ },
+ {
+  "name": "Al Jazeera",
+  "url": "https://www.aljazeera.com/xml/rss/all.xml",
+  "region": "world",
+  "topic": "politics",
+  "skip": "/sports/",
+  "max": 12
+ },
+ {
+  "name": "NPR World",
+  "url": "https://feeds.npr.org/1004/rss.xml",
+  "region": "world",
+  "topic": "politics",
+  "max": 12
+ },
+ {
+  "name": "BBC Persian",
+  "url": "https://feeds.bbci.co.uk/persian/rss.xml",
+  "region": "iran",
+  "topic": "politics"
+ },
+ {
+  "name": "Iran International",
+  "url": "https://www.iranintl.com/fa/feed",
+  "region": "iran",
+  "topic": "politics",
+  "max": 30
+ },
+ {
+  "name": "Euronews Persian",
+  "url": "https://per.euronews.com/rss",
+  "region": "iran",
+  "topic": "politics",
+  "max": 30
+ },
+ {
+  "name": "BBC Business",
+  "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
+  "region": "world",
+  "topic": "economy"
+ },
+ {
+  "name": "Bloomberg Markets",
+  "url": "https://feeds.bloomberg.com/markets/news.rss",
+  "region": "world",
+  "topic": "economy"
+ },
+ {
+  "name": "Financial Times",
+  "url": "https://www.ft.com/rss/home",
+  "region": "world",
+  "topic": "economy"
+ },
+ {
+  "name": "CNBC Economy",
+  "url": "https://www.cnbc.com/id/20910258/device/rss/rss.html",
+  "region": "world",
+  "topic": "economy"
+ },
+ {
+  "name": "Guardian Business",
+  "url": "https://www.theguardian.com/business/rss",
+  "region": "world",
+  "topic": "economy"
+ },
+ {
+  "name": "The Economist",
+  "url": "https://www.economist.com/finance-and-economics/rss.xml",
+  "region": "world",
+  "topic": "economy",
+  "max": 12
+ },
+ {
+  "name": "Donya-e-Eqtesad",
+  "url": "https://donya-e-eqtesad.com/feeds/",
+  "region": "iran",
+  "topic": "economy"
+ },
+ {
+  "name": "Eghtesad Online",
+  "url": "https://www.eghtesadonline.com/fa/rss/allnews",
+  "region": "iran",
+  "topic": "economy",
+  "max": 40
+ },
+ {
+  "name": "Tejarat News",
+  "url": "https://www.tejaratnews.com/feed",
+  "region": "iran",
+  "topic": "economy",
+  "max": 40
+ },
+ {
+  "name": "The Verge",
+  "url": "https://www.theverge.com/rss/index.xml",
+  "region": "world",
+  "topic": "tech"
+ },
+ {
+  "name": "Ars Technica",
+  "url": "https://feeds.arstechnica.com/arstechnica/index",
+  "region": "world",
+  "topic": "tech"
+ },
+ {
+  "name": "Wired",
+  "url": "https://www.wired.com/feed/rss",
+  "region": "world",
+  "topic": "tech"
+ },
+ {
+  "name": "Rest of World",
+  "url": "https://restofworld.org/feed/latest",
+  "region": "world",
+  "topic": "tech"
+ },
+ {
+  "name": "TNW",
+  "url": "https://thenextweb.com/feed?category=fintech",
+  "region": "world",
+  "topic": "tech"
+ },
+ {
+  "name": "Zoomit",
+  "url": "https://www.zoomit.ir/feed/",
+  "region": "iran",
+  "topic": "tech"
+ },
+ {
+  "name": "Digiato",
+  "url": "https://digiato.com/feed",
+  "region": "iran",
+  "topic": "tech"
+ },
+ {
+  "name": "TechCrunch AI",
+  "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
+  "region": "world",
+  "topic": "ai"
+ },
+ {
+  "name": "MIT Technology Review",
+  "url": "https://www.technologyreview.com/feed/",
+  "region": "world",
+  "topic": "ai"
+ },
+ {
+  "name": "VentureBeat AI",
+  "url": "https://venturebeat.com/category/ai/feed/",
+  "region": "world",
+  "topic": "ai"
+ },
+ {
+  "name": "The Decoder",
+  "url": "https://the-decoder.com/feed/",
+  "region": "world",
+  "topic": "ai"
+ },
+ {
+  "name": "Digiato AI",
+  "url": "https://digiato.com/topic/artificial-intelligence/feed",
+  "region": "iran",
+  "topic": "ai"
+ },
+ {
+  "name": "Manufacturing Dive",
+  "url": "https://www.manufacturingdive.com/feeds/news/",
+  "region": "world",
+  "topic": "industry"
+ },
+ {
+  "name": "Supply Chain Dive",
+  "url": "https://www.supplychaindive.com/feeds/news/",
+  "region": "world",
+  "topic": "industry"
+ },
+ {
+  "name": "Utility Dive",
+  "url": "https://www.utilitydive.com/feeds/news/",
+  "region": "world",
+  "topic": "industry"
+ },
+ {
+  "name": "OilPrice.com",
+  "url": "https://oilprice.com/rss/main",
+  "region": "world",
+  "topic": "industry"
+ },
+ {
+  "name": "Shana",
+  "url": "https://www.shana.ir/rss",
+  "region": "iran",
+  "topic": "industry"
+ },
+ {
+  "name": "TechCrunch Startups",
+  "url": "https://techcrunch.com/category/startups/feed/",
+  "region": "world",
+  "topic": "startups"
+ },
+ {
+  "name": "TechCrunch Venture",
+  "url": "https://techcrunch.com/category/venture/feed/",
+  "region": "world",
+  "topic": "startups"
+ },
+ {
+  "name": "Crunchbase News",
+  "url": "https://news.crunchbase.com/feed/",
+  "region": "world",
+  "topic": "startups"
+ },
+ {
+  "name": "Sifted",
+  "url": "https://sifted.eu/feed",
+  "region": "world",
+  "topic": "startups"
+ },
+ {
+  "name": "Y Combinator Blog",
+  "url": "https://www.ycombinator.com/blog/rss/",
+  "region": "world",
+  "topic": "startups"
+ },
+ {
+  "name": "Fast Company",
+  "url": "https://www.fastcompany.com/latest/rss",
+  "region": "world",
+  "topic": "startups"
+ },
+ {
+  "name": "Inc.",
+  "url": "https://www.inc.com/rss/",
+  "region": "world",
+  "topic": "startups"
+ },
+ {
+  "name": "The Daily Star Startups",
+  "url": "https://www.thedailystar.net/business/startups/rss.xml",
+  "region": "world",
+  "topic": "startups"
+ },
+ {
+  "name": "Wamda",
+  "url": "https://www.wamda.com/feed",
+  "region": "world",
+  "topic": "startups"
+ },
+ {
+  "name": "Product Hunt",
+  "url": "https://www.producthunt.com/feed",
+  "region": "world",
+  "topic": "startups",
+  "max": 20
+ },
+ {
+  "name": "Show HN",
+  "url": "https://hnrss.org/show?points=100",
+  "region": "world",
+  "topic": "startups"
+ },
+ {
+  "name": "Peivast",
+  "url": "https://www.peivast.com/feed",
+  "region": "iran",
+  "topic": "startups"
+ },
+ {
+  "name": "TechRasa",
+  "url": "https://techrasa.com/feed/",
+  "region": "iran",
+  "topic": "startups"
+ },
+ {
+  "name": "Finextra",
+  "url": "https://www.finextra.com/rss/headlines.aspx",
+  "region": "world",
+  "topic": "fintech",
+  "max": 25
+ },
+ {
+  "name": "TechCrunch Fintech",
+  "url": "https://techcrunch.com/category/fintech/feed/",
+  "region": "world",
+  "topic": "fintech"
+ },
+ {
+  "name": "PYMNTS",
+  "url": "https://www.pymnts.com/feed/",
+  "region": "world",
+  "topic": "fintech"
+ },
+ {
+  "name": "CoinDesk",
+  "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
+  "region": "world",
+  "topic": "fintech",
+  "max": 15
+ },
+ {
+  "name": "Fintech News Iran",
+  "url": "https://fintechnews.ir/feed",
+  "region": "iran",
+  "topic": "fintech"
+ },
+ {
+  "name": "TechRasa Fintech",
+  "url": "https://techrasa.com/tag/fintech/feed/",
+  "region": "iran",
+  "topic": "fintech"
+ },
+ {
+  "name": "BBC Sport Football",
+  "url": "https://feeds.bbci.co.uk/sport/football/rss.xml",
+  "region": "world",
+  "topic": "football",
+  "max": 30
+ },
+ {
+  "name": "Guardian Football",
+  "url": "https://www.theguardian.com/football/rss",
+  "region": "world",
+  "topic": "football",
+  "max": 30
+ },
+ {
+  "name": "Sky Sports Football",
+  "url": "https://www.skysports.com/rss/12040",
+  "region": "world",
+  "topic": "football"
+ },
+ {
+  "name": "Football Italia",
+  "url": "https://football-italia.net/feed/",
+  "region": "world",
+  "topic": "football",
+  "max": 15
+ },
+ {
+  "name": "Varzesh3",
+  "url": "https://www.varzesh3.com/rss/all",
+  "region": "iran",
+  "topic": "football",
+  "max": 40,
+  "keep": "رئال|بارسا|بارسلونا|اتلتیکو|لالیگا|لیگ برتر انگلیس|منچستر|من‌سیتی|من‌یونایتد|لیورپول|چلسی|آرسنال|تاتنهام|نیوکاسل|بایرن|دورتموند|بوندس‌?لیگا|یوونتوس|اینتر|میلان|ناپولی|رم |سری آ|پاریس|پی‌اس‌جی|لوشامپیونه|لیگ قهرمانان|لیگ اروپا|یوفا|انچلوتی|گواردیولا|آربلوا|فلیک|یامال|امباپه|هالند|صلاح|وینیسیوس|بلینگام|مسی|رونالدو|کین"
+ },
+ {
+  "name": "Khabarvarzeshi",
+  "url": "https://www.khabarvarzeshi.com/rss",
+  "region": "iran",
+  "topic": "football",
+  "max": 30,
+  "keep": "رئال|بارسا|بارسلونا|اتلتیکو|لالیگا|لیگ برتر انگلیس|منچستر|من‌سیتی|من‌یونایتد|لیورپول|چلسی|آرسنال|تاتنهام|نیوکاسل|بایرن|دورتموند|بوندس‌?لیگا|یوونتوس|اینتر|میلان|ناپولی|رم |سری آ|پاریس|پی‌اس‌جی|لوشامپیونه|لیگ قهرمانان|لیگ اروپا|یوفا|انچلوتی|گواردیولا|آربلوا|فلیک|یامال|امباپه|هالند|صلاح|وینیسیوس|بلینگام|مسی|رونالدو|کین"
+ }
 ]

@@ -5,12 +5,17 @@ on:
     - cron: "30 3 * * *"     # 07:00 Tehran - news + daily brief
     - cron: "0 */3 * * *"    # every 3 hours - news + markets
     - cron: "15 * * * *"     # every hour - markets only
+    - cron: "0 2 * * 1"      # Mondays - upcoming world events
   workflow_dispatch:
     inputs:
       brief:
         description: "Also write the daily brief"
         type: boolean
         default: true
+      events:
+        description: "Also refresh upcoming events"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -32,13 +37,18 @@ jobs:
       - name: Fetch market prices
         run: python scripts/fetch_markets.py
       - name: Fetch feeds
-        if: github.event.schedule != '15 * * * *'
+        if: github.event.schedule != '15 * * * *' && github.event.schedule != '0 2 * * 1'
         run: python scripts/fetch_news.py
       - name: Write daily brief
         if: github.event.schedule == '30 3 * * *' || (github.event_name == 'workflow_dispatch' && inputs.brief)
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python scripts/make_digest.py
+      - name: Refresh upcoming events
+        if: github.event.schedule == '0 2 * * 1' || (github.event_name == 'workflow_dispatch' && inputs.events)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/make_events.py
       - name: Commit data
         run: |
           git config user.name "news-bot"

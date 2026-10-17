@@ -39,6 +39,9 @@ ROUTE_RULES = {
     "startups": (r"\b(startups?|raises?|raised|seed round|pre-seed|series [a-e]\b|venture capital|unicorn|founders?|accelerator)\b"
                  r"|استارتاپ|استارت‌آپ|کارآفرین|شتاب‌?دهنده|سرمایه‌?گذاری خطرپذیر|دانش‌?بنیان|جذب سرمایه",
                  {"tech", "ai", "economy"}),
+    "fintech": (r"\b(fintech|neobanks?|payments? (app|startup|company|platform)|digital wallets?|stablecoins?|bnpl|buy now,? pay later|open banking|embedded finance|insurtech|regtech|wealthtech|crypto exchange)\b"
+                r"|فین‌?تک|فینتک|نئوبانک|کیف پول|پرداخت الکترونیک|رمزارز|بانکداری باز|اینشورتک|پی‌اس‌پی",
+                {"startups", "economy", "tech", "ai"}),
     "industry": (r"\b(manufactur\w*|factory|factories|steel|automakers?|refiner\w*|mining|petrochemical\w*|semiconductor plant)\b"
                  r"|خودروساز|فولاد|پتروشیمی|معدن|کارخانه|پالایشگاه|سیمان|نیروگاه|شهرک صنعتی",
                  {"economy", "tech"}),
@@ -169,7 +172,11 @@ def fetch(src):
     items = []
     for title, link, date, summary, image in entries[: src.get("max", DEFAULT_MAX)]:
         title, link = clean(title), clean(link)
+        if src.get("gnews"):  # Google News titles end with " - Publisher"
+            title = re.sub(r"\s+-\s+[^-]{2,40}$", "", title)
         if not title or not link or (src.get("skip") and re.search(src["skip"], link)):
+            continue
+        if src.get("keep") and not re.search(src["keep"], title):
             continue
         d = parse_date(clean(date)) or now
         if d > now:

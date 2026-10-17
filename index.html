@@ -16,20 +16,20 @@
 :root {
   --bg: #f7f5f0; --panel: #ffffff; --ink: #1b1b1f; --ink-2: #3f3f46; --muted: #71717a; --line: #e8e4da; --hover: #f1eee6;
   --c-startups: #db2777; --c-ai: #7c3aed; --c-tech: #2563eb; --c-economy: #059669; --c-industry: #d97706;
-  --c-politics: #dc2626; --c-markets: #0891b2; --c-today: #1b1b1f;
+  --c-politics: #dc2626; --c-markets: #64748b; --c-today: #1b1b1f; --c-fintech: #0891b2; --c-football: #65a30d; --c-events: #9333ea;
   --up: #059669; --down: #dc2626; --star: #f59e0b; --shadow: 0 1px 2px rgba(0,0,0,.04), 0 2px 8px rgba(0,0,0,.04);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #111114; --panel: #1a1a1f; --ink: #ececf1; --ink-2: #c8c8d0; --muted: #9a9aa5; --line: #2a2a31; --hover: #222229;
     --c-startups: #f472b6; --c-ai: #a78bfa; --c-tech: #60a5fa; --c-economy: #34d399; --c-industry: #fbbf24;
-    --c-politics: #f87171; --c-markets: #22d3ee; --c-today: #ececf1; --up: #34d399; --down: #f87171; --shadow: none;
+    --c-politics: #f87171; --c-markets: #94a3b8; --c-today: #ececf1; --c-fintech: #22d3ee; --c-football: #a3e635; --c-events: #c084fc; --up: #34d399; --down: #f87171; --shadow: none;
   }
 }
 :root[data-theme="dark"] {
   --bg: #111114; --panel: #1a1a1f; --ink: #ececf1; --ink-2: #c8c8d0; --muted: #9a9aa5; --line: #2a2a31; --hover: #222229;
   --c-startups: #f472b6; --c-ai: #a78bfa; --c-tech: #60a5fa; --c-economy: #34d399; --c-industry: #fbbf24;
-  --c-politics: #f87171; --c-markets: #22d3ee; --c-today: #ececf1; --up: #34d399; --down: #f87171; --shadow: none;
+  --c-politics: #f87171; --c-markets: #94a3b8; --c-today: #ececf1; --c-fintech: #22d3ee; --c-football: #a3e635; --c-events: #c084fc; --up: #34d399; --down: #f87171; --shadow: none;
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
@@ -48,10 +48,10 @@ aside {
 .logo { display: flex; align-items: center; gap: 10px; padding: 0 10px 4px; }
 .logo img { width: 30px; height: 30px; border-radius: 8px; }
 .logo b { font-size: 17px; letter-spacing: -.01em; }
-.today-date { color: var(--muted); font-size: 13px; padding: 0 10px 14px; }
-.nav-label { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 16px 10px 6px; }
+.today-date { color: var(--muted); font-size: 13px; padding: 0 10px 8px; }
+.nav-label { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 12px 10px 4px; }
 .nav {
-  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px; cursor: pointer;
+  display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 9px; cursor: pointer;
   border: 0; background: none; width: 100%; text-align: left; font-size: 15px; font-weight: 500; color: var(--ink-2);
 }
 .nav:hover { background: var(--hover); }
@@ -161,6 +161,52 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
 .foot { color: var(--muted); font-size: 13px; margin-top: 22px; line-height: 1.7; }
 .ok { color: var(--up); } .err { color: var(--down); }
 
+/* ---------- calendar ---------- */
+.cal { margin: 18px 4px 0; padding: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; font-size: 12px; }
+.cal-h { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; gap: 6px; }
+.cal-h b { font-size: 13px; }
+.cal-h span { color: var(--muted); font-size: 11px; }
+.cal-today { font-size: 11.5px; color: var(--ink-2); margin-bottom: 8px; line-height: 1.5; }
+.cal-g { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+.cal-g .wd { font-size: 10px; color: var(--muted); font-weight: 600; padding-bottom: 2px; }
+.cal-g .d { padding: 3px 0 2px; border-radius: 6px; line-height: 1.1; position: relative; cursor: default; }
+.cal-g .d b { display: block; font-size: 12px; font-weight: 600; }
+.cal-g .d i { display: block; font-style: normal; font-size: 9px; color: var(--muted); }
+.cal-g .d.fri b { color: var(--down); }
+.cal-g .d.now { background: var(--ink); }
+.cal-g .d.now b, .cal-g .d.now i { color: var(--bg); }
+.cal-g .d.ev { cursor: pointer; }
+.cal-g .d.ev::after { content: ""; position: absolute; left: 50%; bottom: -1px; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--c-events); }
+.datebar { display: none; color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+
+/* ---------- events ---------- */
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 5px 12px; font-size: 13px; cursor: pointer; color: var(--ink-2); }
+.chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.ev-row { display: flex; gap: 16px; padding: 14px 4px; border-bottom: 1px solid var(--line); align-items: flex-start; }
+.ev-row:last-child { border-bottom: 0; }
+.ev-date { width: 66px; flex: none; text-align: center; border: 1px solid var(--line); border-radius: 10px; padding: 6px 0; background: var(--panel); }
+.ev-date .dd { font-size: 22px; font-weight: 700; line-height: 1.1; }
+.ev-date .mm { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.ev-date .jj { font-size: 10.5px; color: var(--muted); border-top: 1px solid var(--line); margin-top: 4px; padding-top: 3px; }
+.ev-row.high .ev-date { border-color: var(--c-events); box-shadow: inset 0 0 0 1px var(--c-events); }
+.ev-body { flex: 1; min-width: 0; }
+.ev-body h3 { margin: 4px 0 4px; font-size: 16.5px; line-height: 1.5; }
+.ev-body p { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.8; }
+.ev-body a.src { font-size: 12.5px; color: var(--c-tech); font-family: Inter, sans-serif; }
+.cat { font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 5px; background: var(--hover); color: var(--ink-2); text-transform: capitalize; }
+.upcoming { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.upcoming .card { padding: 12px 14px; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.upcoming .ev-date { width: 54px; padding: 4px 0; }
+.upcoming .ev-date .dd { font-size: 18px; }
+.upcoming h4 { margin: 0; font-size: 14px; line-height: 1.6; font-weight: 600; }
+.idea .ex { background: var(--hover); border-radius: 9px; padding: 8px 10px; margin: 0 0 10px; font-size: 13.5px; line-height: 1.8; color: var(--ink-2); }
+.idea .ex b { color: var(--ink); }
+.idea .area { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--c-startups); font-family: Inter, sans-serif; }
+.idea.fintech { border-top-color: var(--c-fintech); }
+.idea.fintech .area { color: var(--c-fintech); }
+.topic-brief { margin-bottom: 26px; }
+
 /* ---------- responsive ---------- */
 @media (max-width: 1100px) { .front { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 900px) {
@@ -170,7 +216,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     border-right: 0; border-bottom: 1px solid var(--line); padding: 10px 12px; gap: 4px; scrollbar-width: none;
   }
   aside::-webkit-scrollbar { display: none; }
-  .logo b, .today-date, .nav-label, .aside-foot span { display: none; }
+  .logo b, .today-date, .nav-label, .aside-foot span, .cal { display: none; }
+  .datebar { display: block; }
   .logo { padding: 0 6px 0 0; }
   .nav { width: auto; white-space: nowrap; padding: 7px 11px; font-size: 14px; }
   .nav .n { margin-left: 4px; }
@@ -201,19 +248,28 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
   "use strict";
   var TOPICS = [
     { id: "startups", label: "Startups & Ideas", desc: "New companies, funding rounds, product launches and business ideas." },
+    { id: "fintech", label: "Fintech", desc: "Payments, digital banking, lending, insurance tech and crypto - and the business ideas they suggest." },
     { id: "ai", label: "AI", desc: "Artificial intelligence: new models, products, companies, research and policy." },
     { id: "tech", label: "Technology", desc: "Gadgets, software, internet and the tech industry beyond AI." },
     { id: "economy", label: "Economy", desc: "Markets, money, trade, business and economic policy." },
     { id: "industry", label: "Industry", desc: "Manufacturing, energy, oil and gas, mining and supply chains." },
-    { id: "politics", label: "Politics", desc: "World affairs and Iran's politics and foreign relations." }
+    { id: "politics", label: "Politics", desc: "World affairs and Iran's politics and foreign relations, from the major international outlets." },
+    { id: "football", label: "European Football", desc: "Premier League, La Liga, Serie A, Bundesliga, Champions League: results, transfers and stories." }
   ];
+  var TOPIC_BRIEF = {
+    startups: ["startups_world", "startups_iran"], fintech: ["fintech_world", "fintech_iran"], ai: ["ai"], tech: ["tech"],
+    economy: ["economy_world", "economy_iran"], industry: ["industry"], politics: ["politics_world", "politics_iran"], football: ["football"]
+  };
+  var EV_CATS = ["all", "politics", "economy", "markets", "tech", "startups", "sports", "culture", "holiday"];
   var TOPIC = {}; TOPICS.forEach(function (t) { TOPIC[t.id] = t; });
   var BRIEF_SECTIONS = [
     { key: "startups_world", topic: "startups", region: "world" }, { key: "startups_iran", topic: "startups", region: "iran" },
+    { key: "fintech_world", topic: "fintech", region: "world" }, { key: "fintech_iran", topic: "fintech", region: "iran" },
     { key: "ai", topic: "ai" }, { key: "tech", topic: "tech" },
     { key: "economy_world", topic: "economy", region: "world" }, { key: "economy_iran", topic: "economy", region: "iran" },
     { key: "industry", topic: "industry" },
-    { key: "politics_world", topic: "politics", region: "world" }, { key: "politics_iran", topic: "politics", region: "iran" }
+    { key: "politics_world", topic: "politics", region: "world" }, { key: "politics_iran", topic: "politics", region: "iran" },
+    { key: "football", topic: "football" }
   ];
   var PAGE = 15;
   var FA = new RegExp("[" + String.fromCharCode(0x600) + "-" + String.fromCharCode(0x6FF) + "]");
@@ -227,7 +283,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
   var state = {
     view: load("view", "today"), region: load("region", "both"), unit: load("unit", "rial"), q: "",
     limit: { iran: PAGE, world: PAGE }, read: load("read", {}), saved: load("saved", {}),
-    lastVisit: load("lastVisit", null), news: null, digest: null, markets: null
+    lastVisit: load("lastVisit", null), news: null, digest: null, markets: null, events: null, evCat: "all"
   };
   var thisVisit = new Date().toISOString();
   if (!state.lastVisit) state.lastVisit = new Date(Date.now() - 12 * 3600 * 1000).toISOString();
@@ -259,6 +315,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     today: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>',
     markets: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>',
     saved: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>',
+    events: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
     sources: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.5"/></svg>'
   };
 
@@ -290,6 +347,79 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
       '<h3 class="serif-h">' + esc(it.title) + "</h3></div></a>";
   }
 
+  // ---------- calendars ----------
+  var J_FMT = new Intl.DateTimeFormat("en-u-ca-persian-nu-latn", { year: "numeric", month: "numeric", day: "numeric" });
+  var J_MONTH = new Intl.DateTimeFormat("en-u-ca-persian-nu-latn", { month: "long" });
+  function jparts(d) {
+    var o = {};
+    J_FMT.formatToParts(d).forEach(function (p) { if (p.type === "year" || p.type === "month" || p.type === "day") o[p.type] = parseInt(p.value, 10); });
+    return { y: o.year, m: o.month, d: o.day, name: J_MONTH.format(d) };
+  }
+  function ymd(d) {
+    return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+  }
+  function parseYmd(s) { var a = s.split("-"); return new Date(+a[0], +a[1] - 1, +a[2]); }
+  function jLabel(d) { var j = jparts(d); return j.d + " " + j.name + " " + j.y; }
+  function eventDays() {
+    var map = {};
+    ((state.events && state.events.events) || []).forEach(function (e) {
+      var a = parseYmd(e.date), b = e.end_date ? parseYmd(e.end_date) : a;
+      for (var d = new Date(a); d <= b && (d - a) < 40 * 86400000; d.setDate(d.getDate() + 1)) map[ymd(d)] = 1;
+    });
+    return map;
+  }
+  function calendarHtml() {
+    var today = new Date(); today.setHours(12, 0, 0, 0);
+    var tj = jparts(today);
+    var first = new Date(today); first.setDate(first.getDate() - (tj.d - 1));
+    var days = [], d = new Date(first);
+    while (jparts(d).m === tj.m && days.length < 31) { days.push(new Date(d)); d.setDate(d.getDate() + 1); }
+    var last = days[days.length - 1];
+    var gFirst = first.toLocaleDateString("en-US", { month: "short" }), gLast = last.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+    var ev = eventDays();
+    var html = '<div class="cal"><div class="cal-h"><b>' + tj.name + " " + tj.y + "</b><span>" + (gFirst === last.toLocaleDateString("en-US", { month: "short" }) ? gLast : gFirst + " - " + gLast) + "</span></div>" +
+      '<div class="cal-today">' + today.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) + "</div>" +
+      '<div class="cal-g">' + ["Sa", "Su", "Mo", "Tu", "We", "Th", "Fr"].map(function (w) { return '<div class="wd">' + w + "</div>"; }).join("");
+    var lead = (first.getDay() + 1) % 7;
+    for (var i = 0; i < lead; i++) html += "<div></div>";
+    days.forEach(function (x) {
+      var key = ymd(x), cls = "d" + (x.getDay() === 5 ? " fri" : "") + (key === ymd(today) ? " now" : "") + (ev[key] ? " ev" : "");
+      html += '<div class="' + cls + '"' + (ev[key] ? ' data-view="events" title="Events on this day"' : "") + "><b>" + jparts(x).d + "</b><i>" + x.getDate() + "</i></div>";
+    });
+    return html + "</div></div>";
+  }
+  function dateBlock(e) {
+    var d = parseYmd(e.date), j = jparts(d);
+    return '<div class="ev-date"><div class="mm">' + d.toLocaleDateString("en-US", { month: "short" }) + '</div><div class="dd">' + d.getDate() +
+      '</div><div class="mm">' + d.toLocaleDateString("en-US", { weekday: "short" }) + '</div><div class="jj">' + j.d + " " + j.name + "</div></div>";
+  }
+  function upcoming(days) {
+    var now = ymd(new Date()), until = ymd(new Date(Date.now() + days * 86400000));
+    return ((state.events && state.events.events) || []).filter(function (e) {
+      return (e.end_date || e.date) >= now && e.date <= until;
+    });
+  }
+  function renderEvents() {
+    var html = '<header class="ph"><div><div class="kicker" style="color:' + color("events") + '">Calendar</div><h1>World events</h1>' +
+      "<p>Important scheduled events, ceremonies and holidays in the coming weeks - politics, economy, tech, sport and culture, in Iran and worldwide. Researched weekly with web search.</p></div></header>";
+    if (!state.events) return html + '<div class="notice">The events calendar starts once the site runs on GitHub with the Claude API key; it is refreshed every Monday.</div>';
+    html += '<div class="chips" style="margin-bottom:16px">' + EV_CATS.map(function (c) {
+      return '<button class="chip' + (state.evCat === c ? " on" : "") + '" data-evcat="' + c + '">' + (c === "all" ? "All" : c.charAt(0).toUpperCase() + c.slice(1)) + "</button>";
+    }).join("") + "</div>";
+    var list = upcoming(60).filter(function (e) { return state.evCat === "all" || e.category === state.evCat; });
+    if (!list.length) return html + '<div class="empty">No events in this category.</div>';
+    var lastMonth = null, body = "";
+    list.forEach(function (e) {
+      var m = parseYmd(e.date).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+      if (m !== lastMonth) { body += (lastMonth ? "</div>" : "") + sectionTitle(m, color("events")) + '<div class="card" style="padding:4px 18px">'; lastMonth = m; }
+      var end = e.end_date && e.end_date !== e.date ? " &ndash; until " + parseYmd(e.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short" }) : "";
+      body += '<div class="ev-row' + (e.importance === "high" ? " high" : "") + '">' + dateBlock(e) + '<div class="ev-body"' + dirOf(e.title) + ">" +
+        '<div class="meta"><span class="pill ' + e.region + '">' + (e.region === "iran" ? "Iran" : "World") + '</span><span class="cat">' + esc(e.category) + "</span>" + (end ? "<span>" + end + "</span>" : "") + "</div>" +
+        "<h3>" + esc(e.title) + "</h3><p>" + esc(e.why) + "</p>" + (e.url ? '<a class="src" href="' + esc(e.url) + '" target="_blank" rel="noopener" dir="ltr">Source</a>' : "") + "</div></div>";
+    });
+    return html + body + "</div>";
+  }
+
   // ---------- sidebar ----------
   function renderSide() {
     var items = state.news ? state.news.items : [];
@@ -305,8 +435,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
       var n = items.filter(function (it) { return inTopic(it, t.id) && isNew(it); }).length;
       html += nav(t.id, t.label, color(t.id), n);
     });
-    html += '<div class="nav-label">More</div>' + nav("markets", "Markets", null, 0, ICONS.markets) +
-      nav("saved", "Saved", null, Object.keys(state.saved).length, ICONS.saved) + nav("sources", "Sources", null, 0, ICONS.sources);
+    html += '<div class="nav-label">More</div>' + nav("events", "World events", null, 0, ICONS.events) + nav("markets", "Markets", null, 0, ICONS.markets) +
+      nav("saved", "Saved", null, Object.keys(state.saved).length, ICONS.saved) + nav("sources", "Sources", null, 0, ICONS.sources) + calendarHtml();
     html += '<div class="aside-foot"><button class="iconbtn" id="reload" title="Reload" aria-label="Reload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>' +
       '<button class="iconbtn" id="theme" title="Light / dark" aria-label="Toggle theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg></button>' +
       "<span>" + (state.news ? "Updated " + ago(state.news.generated) : "Loading" + ELLIPSIS) + "</span></div>";
@@ -339,6 +469,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
       '<div class="seg">' + ["both", "world", "iran"].map(function (r) {
         return '<button data-region="' + r + '" class="' + (state.region === r ? "on" : "") + '">' + { both: "Both", world: "World", iran: "Iran" }[r] + "</button>";
       }).join("") + "</div></div></header>";
+    if (!q) html += topicBrief(t);
     if (state.region === "both") html += '<div class="cols2">' + column("world", world) + column("iran", iran) + "</div>";
     else html += '<div class="cols2 single">' + column(state.region, state.region === "iran" ? iran : world) + "</div>";
     return html;
@@ -376,6 +507,31 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     });
     return html;
   }
+  function ideasHtml(ideas) {
+    return '<div class="ideas">' + ideas.map(function (x) {
+      var refs = refsHtml(x.links);
+      return '<div class="card idea ' + esc(x.area || "") + '"' + dirOf(x.title) + '><div class="area" dir="ltr">' + esc(x.area || "idea") + "</div><h3>" + esc(x.title) + "</h3>" +
+        (x.example_company ? '<div class="ex"><b dir="ltr">' + esc(x.example_company) + "</b> &mdash; " + esc(x.example) + "</div>" : "") +
+        "<dl><dt>The idea</dt><dd>" + esc(x.what) + "</dd><dt>Why now</dt><dd>" + esc(x.why_now) + "</dd>" +
+        "<dt>In Iran</dt><dd>" + esc(x.iran_angle) + "</dd></dl>" + (refs ? '<div class="refs" dir="ltr">' + refs + "</div>" : "") + "</div>";
+    }).join("") + "</div>";
+  }
+  function topicBrief(t) {
+    var b = state.digest && state.digest.brief;
+    if (!b) return "";
+    var html = "";
+    var ideas = (b.ideas || []).filter(function (x) { return x.area === t.id || (t.id === "startups" && x.area === "general"); });
+    if (ideas.length) html += sectionTitle("Ideas from today's news", color(t.id)) + ideasHtml(ideas);
+    var keys = (TOPIC_BRIEF[t.id] || []).filter(function (k) { return ((b.sections || {})[k] || []).length; });
+    if (keys.length) {
+      html += sectionTitle("Today's brief", color(t.id)) + '<div class="bgrid">' + keys.map(function (k) {
+        var region = k.slice(-5) === "_iran" ? "iran" : (k.slice(-6) === "_world" ? "world" : "");
+        return '<div class="card bsec" style="border-top:3px solid ' + color(t.id) + '">' +
+          (region ? '<h3><span class="pill ' + region + '">' + (region === "iran" ? "Iran" : "World") + "</span></h3>" : "") + bullets(b.sections[k]) + "</div>";
+      }).join("") + "</div>";
+    }
+    return html ? '<div class="topic-brief">' + html + "</div>" : "";
+  }
   function renderToday() {
     var d = state.digest;
     var html = '<header class="ph"><div><div class="kicker" style="color:var(--muted)">' +
@@ -386,12 +542,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
       html += '<div class="card"><div class="meta"><span class="src">Daily brief</span><span>&middot;</span><span>' + ago(d.generated) + "</span><span>&middot;</span><span>" + d.items_considered + " stories read</span></div>" +
         '<p class="brief-hl"' + dirOf(b.headline) + ">" + esc(b.headline) + "</p></div>";
       if (b.ideas && b.ideas.length) {
-        html += sectionTitle("Idea radar", color("startups")) + '<div class="ideas">' + b.ideas.map(function (x) {
-          var refs = refsHtml(x.links);
-          return '<div class="card idea"' + dirOf(x.title) + "><h3>" + esc(x.title) + "</h3><dl>" +
-            "<dt>The idea</dt><dd>" + esc(x.what) + "</dd><dt>Why now</dt><dd>" + esc(x.why_now) + "</dd>" +
-            "<dt>In Iran</dt><dd>" + esc(x.iran_angle) + "</dd></dl>" + (refs ? '<div class="refs" dir="ltr">' + refs + "</div>" : "") + "</div>";
-        }).join("") + "</div>";
+        html += sectionTitle("Idea radar", color("startups")) + ideasHtml(b.ideas);
       }
       if (b.top && b.top.length) html += sectionTitle("Top stories", "var(--c-today)") + '<div class="card bsec">' + bullets(b.top) + "</div>";
       var secs = BRIEF_SECTIONS.filter(function (s) { return ((b.sections || {})[s.key] || []).length; });
@@ -404,6 +555,12 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
       if (b.watch) html += sectionTitle("Worth watching", "var(--c-markets)") + '<div class="card"><div' + dirOf(b.watch) + ' style="line-height:1.9">' + esc(b.watch) + "</div></div>";
     } else {
       html += '<div class="notice">The written daily brief and the idea radar start once the site runs on GitHub with the Claude API key. Below are the latest stories from every topic.</div>';
+    }
+    var soon = upcoming(7);
+    if (soon.length) {
+      html += sectionTitle("Coming up this week", color("events"), "events") + '<div class="upcoming">' + soon.slice(0, 8).map(function (e) {
+        return '<div class="card" data-view="events">' + dateBlock(e) + "<div" + dirOf(e.title) + '><div class="meta"><span class="cat">' + esc(e.category) + "</span></div><h4>" + esc(e.title) + "</h4></div></div>";
+      }).join("") + "</div>";
     }
     return html + frontPage();
   }
@@ -521,8 +678,10 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     else if (v === "markets") html = renderMarkets();
     else if (v === "saved") html = renderSaved();
     else if (v === "sources") html = renderSources();
+    else if (v === "events") html = renderEvents();
     else html = renderToday();
-    main.innerHTML = html;
+    var now = new Date();
+    main.innerHTML = '<div class="datebar">' + jLabel(now) + " &middot; " + now.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" }) + "</div>" + html;
     var q = document.getElementById("q");
     if (q && render.keepFocus) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
     render.keepFocus = false;
@@ -553,6 +712,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     if (r) { state.region = r.getAttribute("data-region"); save("region", state.region); render(); return; }
     var u = e.target.closest("[data-unit]");
     if (u) { state.unit = u.getAttribute("data-unit"); save("unit", state.unit); render(); return; }
+    var ec = e.target.closest("[data-evcat]");
+    if (ec) { state.evCat = ec.getAttribute("data-evcat"); render(); return; }
     var mo = e.target.closest("[data-more]");
     if (mo) { state.limit[mo.getAttribute("data-more")] += PAGE; render(); return; }
     var a = e.target.closest("[data-id]");
@@ -575,9 +736,10 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     Promise.all([
       getJson("data/news.json", bust),
       getJson("data/digest.json", bust).catch(function () { return null; }),
-      getJson("data/markets.json", bust).catch(function () { return null; })
+      getJson("data/markets.json", bust).catch(function () { return null; }),
+      getJson("data/events.json", bust).catch(function () { return null; })
     ]).then(function (res) {
-      state.news = res[0]; state.digest = res[1]; state.markets = res[2];
+      state.news = res[0]; state.digest = res[1]; state.markets = res[2]; state.events = res[3];
       var ids = {}; state.news.items.forEach(function (it) { ids[it.id] = 1; });
       Object.keys(state.read).forEach(function (k) { if (!ids[k]) delete state.read[k]; });
       save("read", state.read);
