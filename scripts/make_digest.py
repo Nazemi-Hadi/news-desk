@@ -2,6 +2,7 @@
 
 Needs ANTHROPIC_API_KEY in the environment. Set DIGEST_LANG=English for an English brief.
 """
+import hashlib
 import json
 import os
 import sys
@@ -13,6 +14,8 @@ import anthropic
 ROOT = Path(__file__).resolve().parent.parent
 NEWS = ROOT / "data" / "news.json"
 OUT = ROOT / "data" / "digest.json"
+MARKETS = ROOT / "data" / "markets.json"
+IDEAS = ROOT / "data" / "ideas.json"
 MODEL = "claude-opus-5-5"
 LANG = os.environ.get("DIGEST_LANG", "Persian (Farsi)")
 WINDOW_HOURS = 26
@@ -30,6 +33,8 @@ SECTIONS = {
     "politics_world": "World politics",
     "politics_iran": "Iran politics and foreign relations",
     "football": "European football: results, transfers, key stories",
+    "giants": "Big companies and industry giants: acquisitions (M&A), earnings, valuations, IPOs, strategy moves",
+    "research": "Notable research reports and essays (a16z, CB Insights, McKinsey, Sequoia, analysts) and their key findings",
 }
 
 BULLET = {
@@ -67,9 +72,10 @@ SCHEMA = {
             "required": ["area", "title", "example_company", "example", "what", "why_now", "iran_angle", "refs"],
             "additionalProperties": False,
         }},
+        "markets": {"type": "array", "items": BULLET},
         "watch": {"type": "string"},
     },
-    "required": ["headline", "top", "sections", "ideas", "watch"],
+    "required": ["headline", "top", "sections", "ideas", "markets", "watch"],
     "additionalProperties": False,
 }
 
@@ -92,6 +98,9 @@ You get a numbered list of headlines from the last day. Using only that list:
   "title" (the business idea for Iran); "what" the Iranian version would do; "why_now" (why the timing is right);
   "iran_angle" (how it fits Iran's market, with practical constraints such as sanctions, payments, licences or
   regulation). "refs" must include the headline about the example company.
+- "markets": 2-4 bullets explaining today's moves in Iran's open-market dollar, gold and coin prices, the Tehran
+  Stock Exchange index, oil and world markets (the figures are given below the headlines), linking each move to the
+  headlines that plausibly explain it. Cite the headlines in "refs"; say so plainly when no headline explains a move.
 - "watch": 1-3 sentences on a trend or signal worth watching, drawn from the list.
 - Every bullet's "refs" lists the [numbers] of the headlines it is based on. Never invent facts beyond the headlines.
 
@@ -109,6 +118,40 @@ def build_input(items):
     return "\n".join(lines)
 
 
+def market_summary():
+    """A few lines of today's market figures for the brief's market note."""
+    if not MARKETS.exists():
+        return "(not available)"
+    m = json.loads(MARKETS.read_text(encoding="utf-8"))
+    lines = []
+    for g in (m.get("iran") or {}).get("groups", []):
+        for r in g["rows"]:
+            if r["key"] in ("usd", "eur", "emami1", "azadi1", "gol18"):
+                ch = f", {r['change']:+.2f}% vs a day earlier" if r.get("change") is not None else ""
+                lines.append(f"Iran open market {r['label']}: {r['sell']:,.0f} toman{ch}")
+    t = m.get("tse")
+    if t:
+        lines.append(f"Tehran Stock Exchange TEDPIX: {t['tedpix']:,.0f} ({t['tedpix_pct']:+.2f}% on the day)")
+    for g in (m.get("world") or {}).get("groups", []):
+        for r in g["rows"][:3]:
+            if r.get("change") is not None:
+                lines.append(f"{r['label']}: {r['price']} ({r['change']:+.2f}% on the day)")
+    return "\n".join(lines) or "(not available)"
+
+
+def save_ideas(ideas):
+    """Append today's ideas to the Idea bank (data/ideas.json), newest first."""
+    bank = []
+    if IDEAS.exists():
+        try:
+            bank = json.loads(IDEAS.read_text(encoding="utf-8"))["ideas"]
+        except (ValueError, KeyError):
+            bank = []
+    known = {i["id"] for i in bank}
+    bank = [i for i in ideas if i["id"] not in known] + bank
+    IDEAS.write_text(json.dumps({"ideas": bank[:1000]}, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
 def main():
     if not os.environ.get("ANTHROPIC_API_KEY"):
         print("ANTHROPIC_API_KEY is not set; skipping the daily brief.")
@@ -120,6 +163,8 @@ def main():
         print("No recent items; skipping.")
         return 0
 
+    content = f"Section keys:\n{json.dumps(SECTIONS, indent=1)}\n\nHeadlines:\n{build_input(items)}"
+    content += "\n\nMarket figures:\n" + market_summary()
     client = anthropic.Anthropic()
     response = client.beta.messages.create(
         model=MODEL,
@@ -128,7 +173,7 @@ def main():
         fallbacks="default",
         output_config={"effort": "medium", "format": {"type": "json_schema", "schema": SCHEMA}},
         system=SYSTEM,
-        messages=[{"role": "user", "content": f"Section keys:\n{json.dumps(SECTIONS, indent=1)}\n\nHeadlines:\n{build_input(items)}"}],
+        messages=[{"role": "user", "content": content}],
     )
     if response.stop_reason != "end_turn":
         print(f"Brief not written: stop_reason={response.stop_reason}")
@@ -143,8 +188,13 @@ def main():
 
     brief["top"] = [resolve(b) for b in brief["top"]]
     brief["sections"] = {k: [resolve(b) for b in v] for k, v in brief["sections"].items()}
+    brief["markets"] = [resolve(b) for b in brief["markets"]]
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     for idea in brief["ideas"]:
         idea["links"] = resolve({"text": "", "refs": idea.pop("refs")})["links"]
+        idea["id"] = hashlib.sha1(f"{today}|{idea['title']}".encode()).hexdigest()[:10]
+        idea["date"] = today
+    save_ideas(brief["ideas"])
     OUT.write_text(json.dumps({
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "model": response.model,

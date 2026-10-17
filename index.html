@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>News Desk</title>
-<meta name="description" content="Daily desk for startups and new ideas, AI, technology, economy, industry, politics and markets - Iran and world.">
-<meta name="theme-color" content="#f7f5f0">
+<title>Radar</title>
+<meta name="description" content="Radar: news, markets and business ideas - startups, fintech, AI, big companies, economy, industry, politics and football, Iran and world.">
+<meta name="theme-color" content="#fbf7f1">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -14,26 +14,46 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f7f5f0; --panel: #ffffff; --ink: #1b1b1f; --ink-2: #3f3f46; --muted: #71717a; --line: #e8e4da; --hover: #f1eee6;
+  --bg: #fbf7f1; --panel: rgba(255,255,255,.86); --ink: #1b1b1f; --ink-2: #3f3f46; --muted: #71717a; --line: #e8e4da; --hover: #f1eee6;
   --c-startups: #db2777; --c-ai: #7c3aed; --c-tech: #2563eb; --c-economy: #059669; --c-industry: #d97706;
-  --c-politics: #dc2626; --c-markets: #64748b; --c-today: #1b1b1f; --c-fintech: #0891b2; --c-football: #65a30d; --c-events: #9333ea;
+  --c-politics: #dc2626; --c-markets: #64748b; --c-today: #1b1b1f; --c-fintech: #0891b2; --c-football: #65a30d; --c-events: #9333ea; --c-giants: #be123c; --c-research: #0f766e; --c-ideas: #c026d3; --c-weekly: #ea580c; --c-apps: #16a34a;
   --up: #059669; --down: #dc2626; --star: #f59e0b; --shadow: 0 1px 2px rgba(0,0,0,.04), 0 2px 8px rgba(0,0,0,.04);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #111114; --panel: #1a1a1f; --ink: #ececf1; --ink-2: #c8c8d0; --muted: #9a9aa5; --line: #2a2a31; --hover: #222229;
+    --bg: #0d0f1c; --panel: rgba(26,28,46,.82); --ink: #ececf1; --ink-2: #c8c8d0; --muted: #9a9aa5; --line: #2a2a31; --hover: #222229;
     --c-startups: #f472b6; --c-ai: #a78bfa; --c-tech: #60a5fa; --c-economy: #34d399; --c-industry: #fbbf24;
-    --c-politics: #f87171; --c-markets: #94a3b8; --c-today: #ececf1; --c-fintech: #22d3ee; --c-football: #a3e635; --c-events: #c084fc; --up: #34d399; --down: #f87171; --shadow: none;
+    --c-politics: #f87171; --c-markets: #94a3b8; --c-today: #ececf1; --c-fintech: #22d3ee; --c-football: #a3e635; --c-events: #c084fc; --c-giants: #fb7185; --c-research: #2dd4bf; --c-ideas: #e879f9; --c-weekly: #fb923c; --c-apps: #4ade80; --up: #34d399; --down: #f87171; --shadow: none;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #111114; --panel: #1a1a1f; --ink: #ececf1; --ink-2: #c8c8d0; --muted: #9a9aa5; --line: #2a2a31; --hover: #222229;
+  --bg: #0d0f1c; --panel: rgba(26,28,46,.82); --ink: #ececf1; --ink-2: #c8c8d0; --muted: #9a9aa5; --line: #2a2a31; --hover: #222229;
   --c-startups: #f472b6; --c-ai: #a78bfa; --c-tech: #60a5fa; --c-economy: #34d399; --c-industry: #fbbf24;
-  --c-politics: #f87171; --c-markets: #94a3b8; --c-today: #ececf1; --c-fintech: #22d3ee; --c-football: #a3e635; --c-events: #c084fc; --up: #34d399; --down: #f87171; --shadow: none;
+  --c-politics: #f87171; --c-markets: #94a3b8; --c-today: #ececf1; --c-fintech: #22d3ee; --c-football: #a3e635; --c-events: #c084fc; --c-giants: #fb7185; --c-research: #2dd4bf; --c-ideas: #e879f9; --c-weekly: #fb923c; --c-apps: #4ade80; --up: #34d399; --down: #f87171; --shadow: none;
 }
 * { box-sizing: border-box; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body {
+    background-image: radial-gradient(900px 520px at 6% -8%, rgba(255,120,80,.16), transparent 62%),
+      radial-gradient(820px 560px at 104% 2%, rgba(130,100,255,.22), transparent 60%),
+      radial-gradient(900px 640px at 55% 112%, rgba(40,190,160,.16), transparent 62%);
+  }
+}
+:root[data-theme="dark"] body {
+  background-image: radial-gradient(900px 520px at 6% -8%, rgba(255,120,80,.16), transparent 62%),
+    radial-gradient(820px 560px at 104% 2%, rgba(130,100,255,.22), transparent 60%),
+    radial-gradient(900px 640px at 55% 112%, rgba(40,190,160,.16), transparent 62%);
+}
+.brand { background: linear-gradient(90deg, #f97316, #db2777 45%, #7c3aed); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 20px !important; letter-spacing: -.02em; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+body {
+  margin: 0; color: var(--ink); background-color: var(--bg);
+  background-image:
+    radial-gradient(1000px 600px at 4% -10%, rgba(255,160,100,.45), transparent 62%),
+    radial-gradient(900px 620px at 106% 0%, rgba(140,110,255,.40), transparent 60%),
+    radial-gradient(1000px 700px at 55% 115%, rgba(40,200,170,.34), transparent 62%),
+    radial-gradient(700px 500px at 30% 55%, rgba(255,110,170,.14), transparent 70%);
+  background-attachment: fixed; font: 16px/1.55 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; }
 img { display: block; }
@@ -43,7 +63,8 @@ img { display: block; }
 .app { display: grid; grid-template-columns: 248px 1fr; min-height: 100vh; }
 aside {
   position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid var(--line);
-  padding: 22px 14px; display: flex; flex-direction: column; gap: 2px; background: var(--bg);
+  padding: 22px 14px; display: flex; flex-direction: column; gap: 2px;
+  background: rgba(255,255,255,.45); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
 }
 .logo { display: flex; align-items: center; gap: 10px; padding: 0 10px 4px; }
 .logo img { width: 30px; height: 30px; border-radius: 8px; }
@@ -64,7 +85,11 @@ aside {
 main { min-width: 0; padding: 28px 36px 80px; max-width: 1240px; width: 100%; }
 
 /* ---------- page header ---------- */
-.ph { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.ph {
+  display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; padding: 20px 22px; border-radius: 18px;
+  border: 1px solid var(--line); background: linear-gradient(115deg, color-mix(in srgb, var(--accent, #7c3aed) 16%, var(--panel)) 0%, var(--panel) 70%);
+  box-shadow: var(--shadow);
+}
 .ph .kicker { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .ph h1 { font-family: Newsreader, Georgia, serif; font-weight: 600; font-size: 38px; line-height: 1.1; margin: 4px 0 6px; letter-spacing: -.01em; }
 .ph p { margin: 0; color: var(--muted); font-size: 14.5px; max-width: 640px; }
@@ -111,7 +136,7 @@ main { min-width: 0; padding: 28px 36px 80px; max-width: 1240px; width: 100%; }
 .empty { color: var(--muted); padding: 30px 6px; text-align: center; font-size: 14.5px; }
 
 /* ---------- today ---------- */
-.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 .brief-hl { font-size: 24px; line-height: 1.6; font-weight: 600; margin: 6px 0 0; }
 .ideas { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
 .idea { border-top: 4px solid var(--c-startups); }
@@ -207,6 +232,45 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
 .idea.fintech .area { color: var(--c-fintech); }
 .topic-brief { margin-bottom: 26px; }
 
+/* ---------- idea bank, reports, weekly, apps ---------- */
+.btn { border: 1px solid var(--line); background: var(--panel); border-radius: 9px; padding: 6px 12px; font-size: 13px; cursor: pointer; color: var(--ink); font-weight: 600; font-family: Inter, sans-serif; display: inline-flex; align-items: center; gap: 6px; }
+.btn.primary { background: linear-gradient(90deg, #7c3aed, #db2777); color: #fff; border: 0; }
+.btn:disabled { opacity: .6; cursor: default; }
+.idea-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; font-family: Inter, sans-serif; }
+.rate { display: inline-flex; gap: 1px; }
+.rate button { background: none; border: 0; padding: 0 1px; cursor: pointer; color: var(--line); font-size: 17px; line-height: 1; }
+.rate button.on { color: var(--star); }
+.status { font-size: 12.5px; color: var(--muted); }
+.field { width: 100%; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 10px; padding: 10px 12px; font: inherit; font-size: 14px; }
+textarea.field { min-height: 84px; resize: vertical; font-family: Vazirmatn, Inter, sans-serif; }
+.settings summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+.settings p { font-size: 13.5px; color: var(--muted); line-height: 1.7; }
+.report h2.rt { font-size: 28px; line-height: 1.5; margin: 0 0 6px; }
+.report .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+.report h3 { margin: 0 0 8px; font-size: 15px; font-family: Inter, Vazirmatn, sans-serif; }
+.report ul, .report ol { margin: 0; padding-inline-start: 20px; line-height: 1.9; font-size: 14.5px; }
+.report li { margin-bottom: 6px; }
+.report p { margin: 0; line-height: 1.9; font-size: 14.5px; }
+.report .co a { color: var(--c-tech); }
+.verdict { border-inline-start: 4px solid var(--c-startups); }
+.stat-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 13px; }
+.stat b { font-size: 17px; display: block; }
+.term { display: inline-flex; gap: 6px; align-items: baseline; border-radius: 999px; padding: 4px 11px; font-size: 13px; background: var(--panel); border: 1px solid var(--line); }
+.term small { color: var(--up); font-weight: 700; }
+.trend { border-top: 4px solid var(--accent, var(--c-ai)); }
+.trend h3 { margin: 0 0 6px; font-size: 17px; line-height: 1.6; }
+.trend .num { font-weight: 700; color: var(--ink); background: var(--hover); border-radius: 8px; padding: 6px 10px; font-size: 13.5px; margin: 8px 0; line-height: 1.8; }
+.trend p { margin: 0; font-size: 14.5px; line-height: 1.85; color: var(--ink-2); }
+.apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 12px; }
+.appcard { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 12px 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+.appcard img { width: 56px; height: 56px; border-radius: 13px; }
+.appcard b { font-size: 13px; line-height: 1.5; font-weight: 600; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.appcard small { font-size: 11px; color: var(--muted); font-family: Inter, sans-serif; }
+.appcard.fresh { box-shadow: 0 0 0 2px var(--c-startups) inset; }
+.capbar { height: 6px; border-radius: 3px; background: linear-gradient(90deg, #7c3aed, #db2777); }
+@media (max-width: 900px) { .report .grid { grid-template-columns: 1fr; } }
+
 /* ---------- responsive ---------- */
 @media (max-width: 1100px) { .front { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 900px) {
@@ -249,16 +313,19 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
   var TOPICS = [
     { id: "startups", label: "Startups & Ideas", desc: "New companies, funding rounds, product launches and business ideas." },
     { id: "fintech", label: "Fintech", desc: "Payments, digital banking, lending, insurance tech and crypto - and the business ideas they suggest." },
+    { id: "giants", label: "Big Companies", desc: "The giants of tech and industry: acquisitions and mergers, earnings, valuations, IPOs and strategy." },
     { id: "ai", label: "AI", desc: "Artificial intelligence: new models, products, companies, research and policy." },
     { id: "tech", label: "Technology", desc: "Gadgets, software, internet and the tech industry beyond AI." },
     { id: "economy", label: "Economy", desc: "Markets, money, trade, business and economic policy." },
     { id: "industry", label: "Industry", desc: "Manufacturing, energy, oil and gas, mining and supply chains." },
     { id: "politics", label: "Politics", desc: "World affairs and Iran's politics and foreign relations, from the major international outlets." },
+    { id: "research", label: "Research & Insights", desc: "Reports and essays from investors and analysts: a16z, CB Insights, Sequoia, McKinsey, Stratechery and more." },
     { id: "football", label: "European Football", desc: "Premier League, La Liga, Serie A, Bundesliga, Champions League: results, transfers and stories." }
   ];
   var TOPIC_BRIEF = {
     startups: ["startups_world", "startups_iran"], fintech: ["fintech_world", "fintech_iran"], ai: ["ai"], tech: ["tech"],
-    economy: ["economy_world", "economy_iran"], industry: ["industry"], politics: ["politics_world", "politics_iran"], football: ["football"]
+    economy: ["economy_world", "economy_iran"], industry: ["industry"], politics: ["politics_world", "politics_iran"], football: ["football"],
+    giants: ["giants"], research: ["research"]
   };
   var EV_CATS = ["all", "politics", "economy", "markets", "tech", "startups", "sports", "culture", "holiday"];
   var TOPIC = {}; TOPICS.forEach(function (t) { TOPIC[t.id] = t; });
@@ -269,6 +336,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     { key: "economy_world", topic: "economy", region: "world" }, { key: "economy_iran", topic: "economy", region: "iran" },
     { key: "industry", topic: "industry" },
     { key: "politics_world", topic: "politics", region: "world" }, { key: "politics_iran", topic: "politics", region: "iran" },
+    { key: "giants", topic: "giants" }, { key: "research", topic: "research" },
     { key: "football", topic: "football" }
   ];
   var PAGE = 15;
@@ -283,7 +351,9 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
   var state = {
     view: load("view", "today"), region: load("region", "both"), unit: load("unit", "rial"), q: "",
     limit: { iran: PAGE, world: PAGE }, read: load("read", {}), saved: load("saved", {}),
-    lastVisit: load("lastVisit", null), news: null, digest: null, markets: null, events: null, evCat: "all"
+    lastVisit: load("lastVisit", null), news: null, digest: null, markets: null, events: null, evCat: "all", ideas: null, reports: null, weekly: null, bazaar: null,
+    ideaArea: "all", reportId: null, ratings: load("ratings", {}), pending: load("pending", {}),
+    settings: load("settings", { repo: "", token: "" })
   };
   var thisVisit = new Date().toISOString();
   if (!state.lastVisit) state.lastVisit = new Date(Date.now() - 12 * 3600 * 1000).toISOString();
@@ -315,6 +385,9 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     today: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>',
     markets: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>',
     saved: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>',
+    ideas: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.9V16h5v-.2c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 3z"/></svg>',
+    weekly: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+    apps: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>',
     events: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
     sources: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.5"/></svg>'
   };
@@ -400,7 +473,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     });
   }
   function renderEvents() {
-    var html = '<header class="ph"><div><div class="kicker" style="color:' + color("events") + '">Calendar</div><h1>World events</h1>' +
+    var html = '<header class="ph" style="--accent:var(--c-events)"><div><div class="kicker" style="color:' + color("events") + '">Calendar</div><h1>World events</h1>' +
       "<p>Important scheduled events, ceremonies and holidays in the coming weeks - politics, economy, tech, sport and culture, in Iran and worldwide. Researched weekly with web search.</p></div></header>";
     if (!state.events) return html + '<div class="notice">The events calendar starts once the site runs on GitHub with the Claude API key; it is refreshed every Monday.</div>';
     html += '<div class="chips" style="margin-bottom:16px">' + EV_CATS.map(function (c) {
@@ -420,6 +493,170 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     return html + body + "</div>";
   }
 
+  // ---------- idea bank & research ----------
+  function repoName() {
+    if (state.settings.repo) return state.settings.repo;
+    var h = location.hostname;
+    if (/\.github\.io$/.test(h)) return h.split(".")[0] + "/" + location.pathname.split("/")[1];
+    return "";
+  }
+  function claudeLink(x) {
+    var q = "I want to start this business in Iran. Do a deep-dive in Persian: real examples abroad, competitors in Iran and globally, " +
+      "market size in Iran and worldwide, a business model, an itemised startup cost (toman and USD), regulation and licences, risks, and the first 90 days of steps.\n\n" +
+      "Idea: " + x.title + "\n" + (x.what || "") + (x.example_company ? "\nExample abroad: " + x.example_company + " - " + (x.example || "") : "");
+    return "https://claude.ai/new?q=" + encodeURIComponent(q);
+  }
+  function ideaActions(x) {
+    var r = state.ratings[x.id] || 0, stars = "";
+    for (var i = 1; i <= 5; i++) stars += '<button data-rate="' + x.id + ":" + i + '" class="' + (i <= r ? "on" : "") + '" title="Rate ' + i + '">&#9733;</button>';
+    var has = state.reports && state.reports.reports && state.reports.reports[x.id];
+    var pend = state.pending[x.id] && (Date.now() - state.pending[x.id] < 30 * 60000);
+    return '<div class="idea-actions" dir="ltr"><span class="rate">' + stars + "</span>" +
+      (has ? '<button class="btn primary" data-report="' + x.id + '">Read report</button>'
+        : pend ? '<span class="status">Researching&hellip; usually 5-10 minutes</span>'
+          : '<button class="btn primary" data-research="' + x.id + '">Research this</button>') +
+      '<a class="btn" href="' + esc(claudeLink(x)) + '" target="_blank" rel="noopener">Ask Claude</a></div>';
+  }
+  function allIdeas() {
+    var list = (state.ideas && state.ideas.ideas) || [];
+    if (!list.length && state.digest && state.digest.brief) list = state.digest.brief.ideas || [];
+    return list;
+  }
+  function dispatch(inputs, done) {
+    var repo = repoName(), token = state.settings.token;
+    if (!repo || !token) { go("ideas"); setTimeout(function () { var d = document.getElementById("settings"); if (d) { d.open = true; d.scrollIntoView({ behavior: "smooth" }); } }, 50); return; }
+    fetch("https://api.github.com/repos/" + repo + "/actions/workflows/update.yml/dispatches", {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + token, "Accept": "application/vnd.github+json", "Content-Type": "application/json" },
+      body: JSON.stringify({ ref: "main", inputs: inputs })
+    }).then(function (r) {
+      if (r.status === 204) done(null);
+      else r.text().then(function (t) { done("GitHub said " + r.status + ": " + t.slice(0, 160)); });
+    }).catch(function (e) { done(String(e)); });
+  }
+  function renderIdeas() {
+    var list = allIdeas();
+    var areas = ["all", "fintech", "general", "ai", "tech", "industry", "mine"];
+    var html = '<header class="ph" style="--accent:var(--c-ideas)"><div><div class="kicker" style="color:' + color("ideas") + '">Ideas</div><h1>Idea bank</h1>' +
+      "<p>Every idea from the daily brief, each anchored in a real company abroad that just did it. Rate them, and press Research this for a full report: competitors, market size, startup cost and first steps.</p></div></header>";
+    html += '<div class="card" style="margin-bottom:18px"><h3 class="t">Research your own idea</h3>' +
+      '<textarea class="field" id="myidea" dir="auto" placeholder="Describe the idea in a few sentences, in Persian or English"></textarea>' +
+      '<div class="idea-actions"><button class="btn primary" id="research-mine">Research my idea</button><span class="status" id="mine-status"></span></div></div>';
+    html += '<div class="chips" style="margin-bottom:16px">' + areas.map(function (a) {
+      return '<button class="chip' + (state.ideaArea === a ? " on" : "") + '" data-area="' + a + '">' + (a === "all" ? "All" : a === "mine" ? "My ideas" : a.charAt(0).toUpperCase() + a.slice(1)) + "</button>";
+    }).join("") + "</div>";
+    var shown = list.filter(function (x) { return state.ideaArea === "all" || (x.area || "general") === state.ideaArea; });
+    shown = shown.slice().sort(function (a, b) { return (state.ratings[b.id] || 0) - (state.ratings[a.id] || 0) || (a.date < b.date ? 1 : -1); });
+    if (!shown.length) html += '<div class="empty">No ideas yet. They arrive with the daily brief every morning.</div>';
+    else {
+      var lastDate = null;
+      html += '<div class="ideas">';
+      shown.forEach(function (x) {
+        if (x.custom) {
+          html += '<div class="card idea"' + dirOf(x.title) + '><div class="area" dir="ltr">my idea &middot; ' + esc(x.date || "") + "</div><h3>" + esc(x.title) + "</h3>" + ideaActions(x) + "</div>";
+        } else html += ideasHtml([x]).replace(/^<div class="ideas">|<\/div>$/g, "");
+      });
+      html += "</div>";
+    }
+    var s = state.settings;
+    html += '<details class="card settings" id="settings" style="margin-top:22px"><summary>Research settings</summary>' +
+      "<p>The Research button asks GitHub to run the research workflow, which uses the site's Claude API key and adds the report here (5-10 minutes; each report costs roughly half a dollar to a dollar of API usage). " +
+      "It needs a GitHub fine-grained personal access token limited to this repository with the <b>Actions: Read and write</b> permission. " +
+      "Create one at github.com &rarr; Settings &rarr; Developer settings &rarr; Fine-grained tokens. The token is kept only in this browser.</p>" +
+      '<p><label>Repository (owner/name)<br><input class="field" id="set-repo" dir="ltr" placeholder="' + esc(repoName() || "owner/news-desk") + '" value="' + esc(s.repo) + '"></label></p>' +
+      '<p><label>Token<br><input class="field" id="set-token" type="password" dir="ltr" autocomplete="off" value="' + esc(s.token) + '"></label></p>' +
+      '<div class="idea-actions"><button class="btn primary" id="save-settings">Save</button><span class="status" id="set-status"></span></div></details>';
+    return html;
+  }
+  function renderReport() {
+    var r = state.reports && state.reports.reports && state.reports.reports[state.reportId];
+    var back = '<p><a class="btn" data-view="ideas">&larr; Idea bank</a></p>';
+    if (!r) return back + '<div class="empty">This report is not ready yet.</div>';
+    function list(items, ordered) {
+      if (!items || !items.length) return '<p class="status">Nothing found.</p>';
+      var tag = ordered ? "ol" : "ul";
+      return "<" + tag + ">" + items.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</" + tag + ">";
+    }
+    function cos(items) {
+      if (!items || !items.length) return '<p class="status">None found.</p>';
+      return '<ul class="co">' + items.map(function (c) {
+        return "<li><b>" + (c.url ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + "</a>" : esc(c.name)) + "</b> &mdash; " + esc(c.what) + "</li>";
+      }).join("") + "</ul>";
+    }
+    var d = dirOf(r.summary);
+    var html = back + '<div class="report"' + d + '><header class="ph" style="--accent:var(--c-ideas)"><div><div class="kicker" dir="ltr" style="color:' + color("ideas") + '">Deep-dive report &middot; ' + ago(r.generated) + '</div><h2 class="rt">' + esc(r.title) + "</h2><p>" + esc(r.summary) + "</p></div></header>";
+    html += '<div class="card verdict"><h3>Verdict</h3><p>' + esc(r.verdict) + "</p></div>";
+    html += '<div class="grid">' +
+      '<div class="card"><h3>Already done abroad</h3>' + cos(r.examples_abroad) + "</div>" +
+      '<div class="card"><h3>Competitors in Iran</h3>' + cos(r.competitors_iran) + "</div>" +
+      '<div class="card"><h3>Global competitors</h3>' + cos(r.competitors_global) + "</div>" +
+      '<div class="card"><h3>Market size</h3><p><b>Iran:</b> ' + esc(r.market.iran) + "</p><p><b>World:</b> " + esc(r.market.global) + "</p><p><b>Trend:</b> " + esc(r.market.trend) + "</p></div>" +
+      '<div class="card"><h3>Business model</h3><p>' + esc(r.business_model) + "</p></div>" +
+      '<div class="card"><h3>Startup cost</h3><p><b>' + esc(r.startup_cost.total) + "</b></p><ul>" + r.startup_cost.items.map(function (c) { return "<li>" + esc(c.item) + ": " + esc(c.cost) + "</li>"; }).join("") + "</ul></div>" +
+      '<div class="card"><h3>Regulation &amp; licences</h3>' + list(r.regulation) + "</div>" +
+      '<div class="card"><h3>Risks</h3>' + list(r.risks) + "</div></div>";
+    html += '<div class="card" style="margin-top:14px"><h3>First steps</h3><ol>' + r.first_steps.map(function (st) { return "<li><b>" + esc(st.step) + "</b> &mdash; " + esc(st.detail) + "</li>"; }).join("") + "</ol></div>";
+    if (r.sources && r.sources.length) html += '<div class="card" style="margin-top:14px"><h3>Sources</h3><div class="refs" dir="ltr">' + r.sources.map(function (x) { return '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.title) + "</a>"; }).join("") + "</div></div>";
+    return html + "</div>";
+  }
+
+  // ---------- weekly trends ----------
+  function renderWeekly() {
+    var w = state.weekly;
+    var html = '<header class="ph" style="--accent:var(--c-weekly)"><div><div class="kicker" style="color:' + color("weekly") + '">Every Friday</div><h1>Weekly trends</h1>' +
+      "<p>What gained momentum this week across startups, fintech, AI, big companies and the economy - counted from every headline, with the numbers behind each trend.</p></div></header>";
+    if (!w) return html + '<div class="notice">The first weekly report is written on Friday once the site runs on GitHub with the Claude API key (it needs a few days of collected news).</div>';
+    var r = w.report, st = w.stats;
+    html += '<div class="card"><div class="meta" dir="ltr"><span class="src">' + esc(w.from) + " &ndash; " + esc(w.to) + "</span><span>&middot;</span><span>" + w.stories + ' stories</span></div><p class="brief-hl"' + dirOf(r.headline) + ">" + esc(r.headline) + "</p></div>";
+    var tagNames = { funding: "Funding rounds", "m&a": "Acquisitions & mergers", launch: "Launches", ipo: "IPOs & valuations", earnings: "Earnings" };
+    html += sectionTitle("This week in numbers", color("weekly")) + '<div class="stat-chips">' + Object.keys(tagNames).filter(function (k) { return st.tags[k]; }).map(function (k) {
+      var v = st.tags[k], diff = v[0] - v[1];
+      return '<div class="stat">' + tagNames[k] + "<b>" + v[0] + (w.has_last_week ? ' <small class="' + (diff >= 0 ? "up" : "down") + '">' + (diff >= 0 ? "+" : "") + diff + "</small>" : "") + "</b></div>";
+    }).join("") + TOPICS.filter(function (t) { return st.topics[t.id]; }).map(function (t) {
+      var v = st.topics[t.id], diff = v[0] - v[1];
+      return '<div class="stat">' + t.label + "<b>" + v[0] + (w.has_last_week ? ' <small class="' + (diff >= 0 ? "up" : "down") + '">' + (diff >= 0 ? "+" : "") + diff + "</small>" : "") + "</b></div>";
+    }).join("") + "</div>";
+    if (st.rising && st.rising.length) html += sectionTitle("Rising words", color("weekly")) + '<div class="stat-chips">' + st.rising.map(function (t) {
+      return '<span class="term"' + dirOf(t.term) + ">" + esc(t.term) + " <small>" + t.this + (w.has_last_week ? " / " + t.last : "") + "</small></span>";
+    }).join("") + "</div>";
+    html += sectionTitle("Trends", color("weekly")) + '<div class="ideas">' + r.trends.map(function (t) {
+      return '<div class="card trend" style="--accent:' + color(t.topic) + '"' + dirOf(t.title) + '><div class="area" dir="ltr" style="color:' + color(t.topic) + '">' + esc((TOPIC[t.topic] || {}).label || t.topic) + "</div><h3>" + esc(t.title) + '</h3><div class="num">' + esc(t.numbers) + "</div><p>" + esc(t.detail) + "</p>" +
+        (t.links && t.links.length ? '<div class="refs" dir="ltr">' + refsHtml(t.links) + "</div>" : "") + "</div>";
+    }).join("") + "</div>";
+    [["opportunities", "Opportunities for Iran", "ideas"], ["funding", "Funding", "startups"], ["deals", "Deals: M&A, IPOs, valuations", "giants"], ["iran", "Iran this week", "economy"]].forEach(function (k) {
+      if (r[k[0]] && r[k[0]].length) html += sectionTitle(k[1], color(k[2])) + '<div class="card bsec">' + bullets(r[k[0]]) + "</div>";
+    });
+    return html;
+  }
+
+  // ---------- new apps ----------
+  function renderApps() {
+    var b = state.bazaar;
+    var html = '<header class="ph" style="--accent:var(--c-apps)"><div><div class="kicker" style="color:' + color("apps") + '">Cafe Bazaar</div><h1>New Iranian apps</h1>' +
+      "<p>Apps that just appeared in Cafe Bazaar's \"new\" lists, by category - a window on what Iranian teams are launching. Kept for 30 days; outlined ones arrived in the last 3 days.</p></div></header>";
+    if (!b) return html + '<div class="notice">No app data yet.</div>';
+    var fresh = new Date(Date.now() - 3 * 86400000).toISOString();
+    b.categories.forEach(function (c) {
+      if (!c.apps.length) return;
+      html += sectionTitle(c.label, color("apps")) + '<div class="apps">' + c.apps.map(function (a) {
+        return '<a class="appcard' + (a.first_seen > fresh ? " fresh" : "") + '" href="https://cafebazaar.ir/app/' + esc(a.pkg) + '" target="_blank" rel="noopener">' +
+          '<img loading="lazy" referrerpolicy="no-referrer" src="' + esc(a.icon) + '" alt="" onerror="this.style.visibility=\'hidden\'"><b dir="rtl">' + esc(a.name) + "</b><small>" + ago(a.first_seen) + "</small></a>";
+      }).join("") + "</div>";
+    });
+    return html;
+  }
+
+  // ---------- giants ----------
+  function giantsTable() {
+    var g = state.markets && state.markets.giants;
+    if (!g || !g.length) return "";
+    var max = g[0].cap;
+    return sectionTitle("The biggest companies by market value", color("giants")) + '<div class="card"><div class="tablewrap"><table><thead><tr><th>#</th><th>Company</th><th style="width:34%"></th><th class="num">Market value</th><th class="num">Day</th></tr></thead><tbody>' +
+      g.map(function (r, i) {
+        return "<tr><td>" + (i + 1) + "</td><td><b>" + esc(r.name) + '</b></td><td><div class="capbar" style="width:' + Math.max(4, Math.round(r.cap / max * 100)) + '%"></div></td><td class="num">$' + fmt(r.cap / 1e12, 2) + 'T</td><td class="num">' + chg(r.change) + "</td></tr>";
+      }).join("") + '</tbody></table></div><div class="meta" style="margin-top:8px">TradingView &middot; market capitalisation in US dollars</div></div>';
+  }
+
   // ---------- sidebar ----------
   function renderSide() {
     var items = state.news ? state.news.items : [];
@@ -428,14 +665,16 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
         (icon || '<span class="dot" style="background:' + dot + '"></span>') + "<span>" + label + "</span>" +
         (n ? '<span class="n" title="New since your last visit">' + n + "</span>" : "") + "</button>";
     }
-    var html = '<div class="logo"><img src="icon.svg" alt=""><b>News Desk</b></div>' +
+    var html = '<div class="logo"><img src="icon.svg" alt=""><b class="brand">Radar</b></div>' +
       '<div class="today-date">' + new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" }) + "</div>" +
       nav("today", "Today", null, 0, ICONS.today) + '<div class="nav-label">Topics</div>';
     TOPICS.forEach(function (t) {
       var n = items.filter(function (it) { return inTopic(it, t.id) && isNew(it); }).length;
       html += nav(t.id, t.label, color(t.id), n);
     });
-    html += '<div class="nav-label">More</div>' + nav("events", "World events", null, 0, ICONS.events) + nav("markets", "Markets", null, 0, ICONS.markets) +
+    html += '<div class="nav-label">Ideas</div>' + nav("ideas", "Idea bank", null, 0, ICONS.ideas) + nav("weekly", "Weekly trends", null, 0, ICONS.weekly) +
+      nav("apps", "New Iranian apps", null, 0, ICONS.apps) +
+      '<div class="nav-label">More</div>' + nav("events", "World events", null, 0, ICONS.events) + nav("markets", "Markets", null, 0, ICONS.markets) +
       nav("saved", "Saved", null, Object.keys(state.saved).length, ICONS.saved) + nav("sources", "Sources", null, 0, ICONS.sources) + calendarHtml();
     html += '<div class="aside-foot"><button class="iconbtn" id="reload" title="Reload" aria-label="Reload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>' +
       '<button class="iconbtn" id="theme" title="Light / dark" aria-label="Toggle theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg></button>' +
@@ -463,13 +702,16 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     var iran = all.filter(function (it) { return it.region === "iran"; });
     var world = all.filter(function (it) { return it.region === "world"; });
     var srcs = state.news.sources.filter(function (s) { return s.topic === t.id; }).map(function (s) { return s.name; });
-    var html = '<header class="ph"><div><div class="kicker" style="color:' + color(t.id) + '">Topic</div><h1>' + t.label + "</h1><p>" + t.desc +
+    var html = '<header class="ph" style="--accent:' + color(t.id) + '"><div><div class="kicker" style="color:' + color(t.id) + '">Topic</div><h1>' + t.label + "</h1><p>" + t.desc +
       " Sources: " + esc(srcs.join(", ")) + ".</p></div>" +
       '<div class="tools"><input class="search" id="q" type="search" placeholder="Search ' + esc(t.label) + '" value="' + esc(state.q) + '">' +
       '<div class="seg">' + ["both", "world", "iran"].map(function (r) {
         return '<button data-region="' + r + '" class="' + (state.region === r ? "on" : "") + '">' + { both: "Both", world: "World", iran: "Iran" }[r] + "</button>";
       }).join("") + "</div></div></header>";
     if (!q) html += topicBrief(t);
+    if (!q && t.id === "giants") html += giantsTable() + '<div style="height:26px"></div>';
+    var hasIran = state.news.sources.some(function (s) { return s.topic === t.id && s.region === "iran"; }) || iran.length;
+    if (!hasIran) return html + '<div class="cols2 single">' + column("world", world) + "</div>";
     if (state.region === "both") html += '<div class="cols2">' + column("world", world) + column("iran", iran) + "</div>";
     else html += '<div class="cols2 single">' + column(state.region, state.region === "iran" ? iran : world) + "</div>";
     return html;
@@ -513,7 +755,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
       return '<div class="card idea ' + esc(x.area || "") + '"' + dirOf(x.title) + '><div class="area" dir="ltr">' + esc(x.area || "idea") + "</div><h3>" + esc(x.title) + "</h3>" +
         (x.example_company ? '<div class="ex"><b dir="ltr">' + esc(x.example_company) + "</b> &mdash; " + esc(x.example) + "</div>" : "") +
         "<dl><dt>The idea</dt><dd>" + esc(x.what) + "</dd><dt>Why now</dt><dd>" + esc(x.why_now) + "</dd>" +
-        "<dt>In Iran</dt><dd>" + esc(x.iran_angle) + "</dd></dl>" + (refs ? '<div class="refs" dir="ltr">' + refs + "</div>" : "") + "</div>";
+        "<dt>In Iran</dt><dd>" + esc(x.iran_angle) + "</dd></dl>" + (refs ? '<div class="refs" dir="ltr">' + refs + "</div>" : "") +
+        (x.id ? ideaActions(x) : "") + "</div>";
     }).join("") + "</div>";
   }
   function topicBrief(t) {
@@ -534,7 +777,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
   }
   function renderToday() {
     var d = state.digest;
-    var html = '<header class="ph"><div><div class="kicker" style="color:var(--muted)">' +
+    var html = '<header class="ph" style="--accent:#f97316"><div><div class="kicker" style="color:var(--muted)">' +
       new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" }) +
       "</div><h1>Today</h1><p>The day's brief, business ideas drawn from the news, and the top stories in every topic.</p></div></header>";
     if (d && d.brief) {
@@ -545,6 +788,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
         html += sectionTitle("Idea radar", color("startups")) + ideasHtml(b.ideas);
       }
       if (b.top && b.top.length) html += sectionTitle("Top stories", "var(--c-today)") + '<div class="card bsec">' + bullets(b.top) + "</div>";
+      if (b.markets && b.markets.length) html += sectionTitle("Markets: why prices moved", color("markets"), "markets") + '<div class="card bsec">' + bullets(b.markets) + "</div>";
       var secs = BRIEF_SECTIONS.filter(function (s) { return ((b.sections || {})[s.key] || []).length; });
       if (secs.length) {
         html += sectionTitle("Brief by topic", "var(--muted)") + '<div class="bgrid">' + secs.map(function (s) {
@@ -578,7 +822,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
   function irr(toman) { return toman === null || toman === undefined ? "&ndash;" : fmt(state.unit === "rial" ? toman * 10 : toman, 0); }
   function renderMarkets() {
     var m = state.markets;
-    var html = '<header class="ph"><div><div class="kicker" style="color:' + color("markets") + '">Markets</div><h1>Prices</h1>' +
+    var html = '<header class="ph" style="--accent:#0891b2"><div><div class="kicker" style="color:' + color("markets") + '">Markets</div><h1>Prices</h1>' +
       "<p>Iran's open-market rates, coins and gold, the Tehran Stock Exchange, oil, and world markets.</p></div>" +
       '<div class="tools"><div class="seg"><button data-unit="rial" class="' + (state.unit === "rial" ? "on" : "") + '">Rial</button>' +
       '<button data-unit="toman" class="' + (state.unit === "toman" ? "on" : "") + '">Toman</button></div></div></header>';
@@ -610,6 +854,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
       return '<div class="kpi"><div class="k">' + k[0] + '</div><div class="v">' + k[1] + '</div><div class="c">' + k[2] + "</div></div>";
     }).join("") + "</div>";
 
+    var note = state.digest && state.digest.brief && state.digest.brief.markets;
+    if (note && note.length) html += sectionTitle("Why prices moved today", color("markets")) + '<div class="card bsec">' + bullets(note) + "</div>";
     html += sectionTitle("Tehran Stock Exchange", color("economy"));
     if (tse) {
       html += '<div class="card"><div class="tablewrap"><table><thead><tr><th>Index</th><th class="num">Value</th><th class="num">Change</th></tr></thead><tbody>' +
@@ -679,6 +925,10 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     else if (v === "saved") html = renderSaved();
     else if (v === "sources") html = renderSources();
     else if (v === "events") html = renderEvents();
+    else if (v === "ideas") html = renderIdeas();
+    else if (v === "report") html = renderReport();
+    else if (v === "weekly") html = renderWeekly();
+    else if (v === "apps") html = renderApps();
     else html = renderToday();
     var now = new Date();
     main.innerHTML = '<div class="datebar">' + jLabel(now) + " &middot; " + now.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" }) + "</div>" + html;
@@ -712,6 +962,42 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     if (r) { state.region = r.getAttribute("data-region"); save("region", state.region); render(); return; }
     var u = e.target.closest("[data-unit]");
     if (u) { state.unit = u.getAttribute("data-unit"); save("unit", state.unit); render(); return; }
+    var ar = e.target.closest("[data-area]");
+    if (ar) { state.ideaArea = ar.getAttribute("data-area"); render(); return; }
+    var rt = e.target.closest("[data-rate]");
+    if (rt) {
+      var pr = rt.getAttribute("data-rate").split(":");
+      state.ratings[pr[0]] = state.ratings[pr[0]] === +pr[1] ? 0 : +pr[1]; save("ratings", state.ratings); render(); return;
+    }
+    var rp = e.target.closest("[data-report]");
+    if (rp) { state.reportId = rp.getAttribute("data-report"); state.view = "report"; render(); window.scrollTo(0, 0); return; }
+    var rs = e.target.closest("[data-research]");
+    if (rs) {
+      var rid = rs.getAttribute("data-research");
+      rs.disabled = true; rs.textContent = "Starting...";
+      dispatch({ research: rid }, function (err) {
+        if (err) { alert("Could not start the research: " + err); render(); return; }
+        state.pending[rid] = Date.now(); save("pending", state.pending); render(); watchPending();
+      });
+      return;
+    }
+    if (e.target.id === "research-mine") {
+      var txt = (document.getElementById("myidea").value || "").trim(), ms = document.getElementById("mine-status");
+      if (txt.length < 15) { ms.textContent = "Write a sentence or two first."; return; }
+      e.target.disabled = true; ms.textContent = "Starting...";
+      dispatch({ research_text: txt }, function (err) {
+        e.target.disabled = false;
+        ms.textContent = err ? "Could not start: " + err : "Started. The idea and its report will appear here in about 5-10 minutes.";
+        if (!err) { state.pending.mine = Date.now(); save("pending", state.pending); watchPending(); }
+      });
+      return;
+    }
+    if (e.target.id === "save-settings") {
+      state.settings = { repo: document.getElementById("set-repo").value.trim(), token: document.getElementById("set-token").value.trim() };
+      save("settings", state.settings);
+      document.getElementById("set-status").textContent = "Saved in this browser.";
+      return;
+    }
     var ec = e.target.closest("[data-evcat]");
     if (ec) { state.evCat = ec.getAttribute("data-evcat"); render(); return; }
     var mo = e.target.closest("[data-more]");
@@ -737,9 +1023,19 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
       getJson("data/news.json", bust),
       getJson("data/digest.json", bust).catch(function () { return null; }),
       getJson("data/markets.json", bust).catch(function () { return null; }),
-      getJson("data/events.json", bust).catch(function () { return null; })
+      getJson("data/events.json", bust).catch(function () { return null; }),
+      getJson("data/ideas.json", bust).catch(function () { return null; }),
+      getJson("data/reports.json", bust).catch(function () { return null; }),
+      getJson("data/weekly.json", bust).catch(function () { return null; }),
+      getJson("data/bazaar.json", bust).catch(function () { return null; })
     ]).then(function (res) {
       state.news = res[0]; state.digest = res[1]; state.markets = res[2]; state.events = res[3];
+      state.ideas = res[4]; state.reports = res[5]; state.weekly = res[6]; state.bazaar = res[7];
+      var reps = (state.reports && state.reports.reports) || {};
+      Object.keys(state.pending).forEach(function (k) {
+        if (reps[k] || Date.now() - state.pending[k] > 30 * 60000) delete state.pending[k];
+      });
+      save("pending", state.pending);
       var ids = {}; state.news.items.forEach(function (it) { ids[it.id] = 1; });
       Object.keys(state.read).forEach(function (k) { if (!ids[k]) delete state.read[k]; });
       save("read", state.read);
@@ -749,8 +1045,18 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
     });
   }
 
+  var watching = null;
+  function watchPending() {
+    if (watching) return;
+    watching = setInterval(function () {
+      if (!Object.keys(state.pending).length) { clearInterval(watching); watching = null; return; }
+      fetchData(true);
+    }, 60000);
+  }
+
   render();
   fetchData(false);
+  if (Object.keys(state.pending).length) watchPending();
   window.addEventListener("pagehide", function () { save("lastVisit", thisVisit); });
   document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") save("lastVisit", thisVisit); });
   // no service worker on localhost, so local edits show up on reload

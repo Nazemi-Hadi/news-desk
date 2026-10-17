@@ -468,5 +468,102 @@
   "topic": "football",
   "max": 30,
   "keep": "رئال|بارسا|بارسلونا|اتلتیکو|لالیگا|لیگ برتر انگلیس|منچستر|من‌سیتی|من‌یونایتد|لیورپول|چلسی|آرسنال|تاتنهام|نیوکاسل|بایرن|دورتموند|بوندس‌?لیگا|یوونتوس|اینتر|میلان|ناپولی|رم |سری آ|پاریس|پی‌اس‌جی|لوشامپیونه|لیگ قهرمانان|لیگ اروپا|یوفا|انچلوتی|گواردیولا|آربلوا|فلیک|یامال|امباپه|هالند|صلاح|وینیسیوس|بلینگام|مسی|رونالدو|کین"
+ },
+ {
+  "name": "Bloomberg Technology",
+  "url": "https://feeds.bloomberg.com/technology/news.rss",
+  "region": "world",
+  "topic": "giants"
+ },
+ {
+  "name": "CNBC Tech",
+  "url": "https://www.cnbc.com/id/19854910/device/rss/rss.html",
+  "region": "world",
+  "topic": "giants",
+  "max": 20
+ },
+ {
+  "name": "WSJ Business",
+  "url": "https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml",
+  "region": "world",
+  "topic": "giants"
+ },
+ {
+  "name": "FT Companies",
+  "url": "https://www.ft.com/companies?format=rss",
+  "region": "world",
+  "topic": "giants"
+ },
+ {
+  "name": "Crunchbase M&A",
+  "url": "https://news.crunchbase.com/sections/ma/feed/",
+  "region": "world",
+  "topic": "giants"
+ },
+ {
+  "name": "TechCrunch M&A",
+  "url": "https://techcrunch.com/tag/mergers-and-acquisitions/feed/",
+  "region": "world",
+  "topic": "giants"
+ },
+ {
+  "name": "a16z",
+  "url": "https://www.a16z.news/feed",
+  "region": "world",
+  "topic": "research"
+ },
+ {
+  "name": "CB Insights",
+  "url": "https://www.cbinsights.com/research/feed/",
+  "region": "world",
+  "topic": "research"
+ },
+ {
+  "name": "Sequoia Capital",
+  "url": "https://sequoiacap.com/feed/",
+  "region": "world",
+  "topic": "research",
+  "max": 10
+ },
+ {
+  "name": "McKinsey Insights",
+  "url": "https://www.mckinsey.com/insights/rss",
+  "region": "world",
+  "topic": "research",
+  "max": 15
+ },
+ {
+  "name": "Benedict Evans",
+  "url": "https://www.ben-evans.com/benedictevans?format=rss",
+  "region": "world",
+  "topic": "research",
+  "max": 10
+ },
+ {
+  "name": "Stratechery",
+  "url": "https://stratechery.com/feed/",
+  "region": "world",
+  "topic": "research"
+ },
+ {
+  "name": "Not Boring",
+  "url": "https://www.notboring.co/feed",
+  "region": "world",
+  "topic": "research",
+  "max": 10
+ },
+ {
+  "name": "Exponential View",
+  "url": "https://www.exponentialview.co/feed",
+  "region": "world",
+  "topic": "research",
+  "max": 10
+ },
+ {
+  "name": "Lenny's Newsletter",
+  "url": "https://www.lennysnewsletter.com/feed",
+  "region": "world",
+  "topic": "research",
+  "max": 10
  }
 ]

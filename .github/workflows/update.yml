@@ -1,58 +1,99 @@
-name: Update news and markets
+name: Update site
 
 on:
   schedule:
-    - cron: "30 3 * * *"     # 07:00 Tehran - news + daily brief
+    - cron: "30 3 * * *"     # 07:00 Tehran - news, markets, apps + daily brief
     - cron: "0 */3 * * *"    # every 3 hours - news + markets
     - cron: "15 * * * *"     # every hour - markets only
     - cron: "0 2 * * 1"      # Mondays - upcoming world events
+    - cron: "0 4 * * 5"      # Fridays - weekly trends
+  push:
+    branches: [main]         # redeploy when the code changes
   workflow_dispatch:
     inputs:
       brief:
-        description: "Also write the daily brief"
-        type: boolean
-        default: true
-      events:
-        description: "Also refresh upcoming events"
+        description: "Write the daily brief"
         type: boolean
         default: false
+      events:
+        description: "Refresh upcoming events"
+        type: boolean
+        default: false
+      weekly:
+        description: "Write the weekly trends report"
+        type: boolean
+        default: false
+      research:
+        description: "Deep-dive research: an idea id from the Idea bank"
+        type: string
+        default: ""
+      research_text:
+        description: "Deep-dive research: your own idea, in your words"
+        type: string
+        default: ""
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
-  group: update-news
+  group: site
   cancel-in-progress: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      SCHEDULE: ${{ github.event.schedule }}
+      EVENT: ${{ github.event_name }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - name: Fetch market prices
+      - name: Start from the live data
+        run: python scripts/pull_data.py
+      - name: Market prices
+        if: env.EVENT != 'workflow_dispatch' || (inputs.research == '' && inputs.research_text == '')
         run: python scripts/fetch_markets.py
-      - name: Fetch feeds
-        if: github.event.schedule != '15 * * * *' && github.event.schedule != '0 2 * * 1'
+      - name: News feeds
+        if: env.SCHEDULE == '' || env.SCHEDULE == '30 3 * * *' || env.SCHEDULE == '0 */3 * * *'
         run: python scripts/fetch_news.py
-      - name: Write daily brief
-        if: github.event.schedule == '30 3 * * *' || (github.event_name == 'workflow_dispatch' && inputs.brief)
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - name: New apps on Cafe Bazaar
+        if: env.SCHEDULE == '30 3 * * *' || env.EVENT == 'push'
+        run: python scripts/fetch_bazaar.py
+        continue-on-error: true
+      - name: Daily brief
+        if: env.SCHEDULE == '30 3 * * *' || inputs.brief
         run: python scripts/make_digest.py
-      - name: Refresh upcoming events
-        if: github.event.schedule == '0 2 * * 1' || (github.event_name == 'workflow_dispatch' && inputs.events)
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - name: Upcoming events
+        if: env.SCHEDULE == '0 2 * * 1' || inputs.events
         run: python scripts/make_events.py
-      - name: Commit data
+        continue-on-error: true
+      - name: Weekly trends
+        if: env.SCHEDULE == '0 4 * * 5' || inputs.weekly
+        run: python scripts/make_weekly.py
+        continue-on-error: true
+      - name: Deep-dive research
+        if: inputs.research != '' || inputs.research_text != ''
+        run: python scripts/deep_dive.py
+        env:
+          IDEA_ID: ${{ inputs.research }}
+          IDEA_TEXT: ${{ inputs.research_text }}
+      - name: Build the site
         run: |
-          git config user.name "news-bot"
-          git config user.email "news-bot@users.noreply.github.com"
-          git add data
-          git diff --cached --quiet || git commit -m "Update data $(date -u +%Y-%m-%dT%H:%MZ)"
-          git pull --rebase --quiet && git push
+          mkdir -p _site
+          cp index.html sw.js manifest.webmanifest icon.svg icon-192.png icon-512.png _site/
+          cp -r data _site/data
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4

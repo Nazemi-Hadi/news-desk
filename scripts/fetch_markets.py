@@ -126,6 +126,31 @@ def day_ago_snapshot(history):
     return best[1] if best else None
 
 
+GIANTS = [
+    ("NASDAQ:NVDA", "Nvidia"), ("NASDAQ:AAPL", "Apple"), ("NASDAQ:GOOGL", "Alphabet"), ("NASDAQ:MSFT", "Microsoft"),
+    ("NASDAQ:AMZN", "Amazon"), ("NYSE:TSM", "TSMC"), ("NASDAQ:META", "Meta"), ("TADAWUL:2222", "Saudi Aramco"),
+    ("NASDAQ:AVGO", "Broadcom"), ("NASDAQ:TSLA", "Tesla"), ("NYSE:LLY", "Eli Lilly"), ("NYSE:BRK.B", "Berkshire Hathaway"),
+    ("KRX:005930", "Samsung"), ("NASDAQ:WMT", "Walmart"), ("NYSE:JPM", "JPMorgan"), ("NYSE:V", "Visa"),
+    ("NYSE:XOM", "ExxonMobil"), ("NASDAQ:ASML", "ASML"), ("HKEX:700", "Tencent"), ("NYSE:ORCL", "Oracle"),
+    ("NASDAQ:NFLX", "Netflix"), ("NYSE:BABA", "Alibaba"), ("NYSE:SAP", "SAP"),
+]
+
+
+def fetch_giants():
+    body = json.dumps({"symbols": {"tickers": [t for t, _ in GIANTS]},
+                       "columns": ["close", "change", "market_cap_basic", "currency"]}).encode()
+    req = urllib.request.Request("https://scanner.tradingview.com/global/scan", data=body,
+                                 headers={"User-Agent": UA, "Content-Type": "application/json"})
+    rows = {r["s"]: r["d"] for r in json.load(urllib.request.urlopen(req, timeout=25)).get("data", [])}
+    out = []
+    for sym, name in GIANTS:
+        d = rows.get(sym)
+        if d and d[2]:
+            out.append({"sym": sym, "name": name, "price": d[0], "change": round(d[1], 2) if d[1] is not None else None,
+                        "cap": d[2], "currency": d[3]})
+    return sorted(out, key=lambda r: r["cap"], reverse=True)
+
+
 def main():
     old = {}
     if OUT.exists():
@@ -172,6 +197,12 @@ def main():
     except Exception as e:
         errors["bonbast"] = f"{type(e).__name__}: {str(e)[:150]}"
 
+    giants = old.get("giants")
+    try:
+        giants = fetch_giants()
+    except Exception as e:
+        errors["giants"] = f"{type(e).__name__}: {str(e)[:150]}"
+
     tse = old.get("tse")
     try:
         tse = fetch_tse()
@@ -198,7 +229,7 @@ def main():
     cutoff = (datetime.now(timezone.utc) - timedelta(days=HISTORY_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
     history = [h for h in history if h["t"] >= cutoff]
     OUT.parent.mkdir(exist_ok=True)
-    OUT.write_text(json.dumps({"generated": now_iso(), "errors": errors, "iran": iran, "tse": tse, "world": world,
+    OUT.write_text(json.dumps({"generated": now_iso(), "errors": errors, "iran": iran, "tse": tse, "world": world, "giants": giants,
                                "history": history}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print("markets saved", errors or "OK")
     return 0

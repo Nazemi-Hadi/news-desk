@@ -31,6 +31,12 @@ TAG_RULES = {
                r"|جذب سرمایه|سرمایه‌?گذاری خطرپذیر|تامین مالی جمعی",
     "launch": r"\b(launch(es|ed)?|unveils?|debuts?|founded|stealth|new startup)\b"
               r"|راه‌?اندازی شد|رونمایی|معرفی شد",
+    "m&a": r"\b(acquires?|acquired|acquisition|merger|merges?|takeover|buyout|buys stake|to buy|agrees to buy)\b"
+           r"|ادغام|تملک|تصاحب|خرید سهام|واگذاری",
+    "earnings": r"\b(earnings|quarterly (results|profit|revenue)|q[1-4] (results|revenue|profit)|profit (rose|fell|jumps|drops)|revenue (rose|fell|beat|miss))\b"
+                r"|سود خالص|صورت‌?های مالی|گزارش فصلی",
+    "ipo": r"\b(ipo|initial public offering|goes public|listing|valuation|valued at|market (cap|value))\b"
+           r"|عرضه اولیه|ارزش بازار|ارزش‌?گذاری",
 }
 # Extra topics a story is routed into, and which source topics may route into them.
 ROUTE_RULES = {
@@ -42,6 +48,13 @@ ROUTE_RULES = {
     "fintech": (r"\b(fintech|neobanks?|payments? (app|startup|company|platform)|digital wallets?|stablecoins?|bnpl|buy now,? pay later|open banking|embedded finance|insurtech|regtech|wealthtech|crypto exchange)\b"
                 r"|فین‌?تک|فینتک|نئوبانک|کیف پول|پرداخت الکترونیک|رمزارز|بانکداری باز|اینشورتک|پی‌اس‌پی",
                 {"startups", "economy", "tech", "ai"}),
+    "giants": (r"\b(apple|microsoft|nvidia|alphabet|google|amazon|meta platforms|meta's|tesla|openai|anthropic|samsung|tsmc|"
+               r"broadcom|oracle|intel|amd|qualcomm|netflix|aramco|berkshire|jpmorgan|goldman sachs|tencent|alibaba|bytedance|"
+               r"huawei|xiaomi|byd|toyota|siemens|shell|exxon|asml|sap|softbank|spacex)\b"
+               r"|\b(acquires?|acquisition|merger|takeover|buyout)\b"
+               r"|اپل|مایکروسافت|انویدیا|گوگل|آمازون|تسلا|سامسونگ|اوپن‌?ای‌?آی|هواوی|شیائومی|آرامکو"
+               r"|فولاد مبارکه|ایران‌?خودرو|سایپا|همراه اول|ایرانسل|دیجی‌?کالا|اسنپ|فملی|شستا|ملی مس|ادغام|تملک",
+               {"economy", "tech", "ai", "startups", "industry", "fintech"}),
     "industry": (r"\b(manufactur\w*|factory|factories|steel|automakers?|refiner\w*|mining|petrochemical\w*|semiconductor plant)\b"
                  r"|خودروساز|فولاد|پتروشیمی|معدن|کارخانه|پالایشگاه|سیمان|نیروگاه|شهرک صنعتی",
                  {"economy", "tech"}),
@@ -205,6 +218,26 @@ def fetch(src):
     return src, items, None
 
 
+ARCHIVE = ROOT / "data" / "archive.json"
+ARCHIVE_DAYS = 14
+
+
+def update_archive(items):
+    """Keep a compact copy of every story for ARCHIVE_DAYS (news.json only holds 3 days)."""
+    arch = {}
+    if ARCHIVE.exists():
+        try:
+            arch = {i["id"]: i for i in json.loads(ARCHIVE.read_text(encoding="utf-8"))["items"]}
+        except (ValueError, KeyError):
+            arch = {}
+    for it in items:
+        if it["id"] not in arch:
+            arch[it["id"]] = {k: it[k] for k in ("id", "title", "link", "source", "region", "topics", "tags", "date")}
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=ARCHIVE_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    kept = sorted((i for i in arch.values() if i["date"] >= cutoff), key=lambda i: i["date"], reverse=True)
+    ARCHIVE.write_text(json.dumps({"items": kept}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+
 def main():
     sources = json.loads(SOURCES.read_text(encoding="utf-8"))
     old = {}
@@ -230,6 +263,7 @@ def main():
     items = sorted((i for i in merged.values() if i["date"] >= cutoff), key=lambda i: i["date"], reverse=True)
 
     OUT.parent.mkdir(exist_ok=True)
+    update_archive(items)
     OUT.write_text(json.dumps({
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sources": status,
